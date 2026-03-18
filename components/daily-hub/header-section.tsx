@@ -60,7 +60,7 @@ export function HeaderSection() {
           </div>
           {showStreakTooltip && (
             <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg whitespace-nowrap z-50 shadow-lg">
-              12 dias seguidos cumpliendo tus tareas
+              Venis en racha, 12 dias ingresando a la app
               <div className="absolute -top-1 right-4 w-2 h-2 bg-gray-800 rotate-45" />
             </div>
           )}
