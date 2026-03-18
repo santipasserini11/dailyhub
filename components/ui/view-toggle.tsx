@@ -20,7 +20,7 @@ export function ViewToggle() {
         style={{ color: viewMode === 'inicio' ? '#182E7B' : undefined }}
       >
         <Home className="w-4 h-4" />
-        <span>Inicio</span>
+        <span>DailyHub</span>
       </button>
       <button
         onClick={() => setViewMode('calendario')}

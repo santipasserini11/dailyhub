@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, MessageSquare, LayoutGrid, Star, User } from 'lucide-react';
+import { Home, MessageSquare, LayoutGrid, Newspaper, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useApp } from '@/lib/context';
 import { useMemo } from 'react';
@@ -59,9 +59,9 @@ export function BottomNav() {
         active 
         badge={urgentCount}
       />
+      <NavItem icon={<Newspaper className="w-5 h-5" />} label="Muro" />
       <NavItem icon={<MessageSquare className="w-5 h-5" />} label="Chats" />
       <NavItem icon={<LayoutGrid className="w-5 h-5" />} label="Apps" />
-      <NavItem icon={<Star className="w-5 h-5" />} label="Reconocimientos" />
       <NavItem icon={<User className="w-5 h-5" />} label="Perfil" />
     </nav>
   );
