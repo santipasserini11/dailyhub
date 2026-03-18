@@ -103,16 +103,37 @@ export const events: CalendarEvent[] = [
   { id: 'a15', title: 'All Hands Mensual', category: 'company-event', startDate: date(4, 30), isAllDay: true },
   { id: 'a15b', title: 'All Hands Mensual', category: 'company-event', startDate: date(4, 30), isAllDay: false, startTime: '10:00', endTime: '11:30' },
   
-  // April timed events
-  { id: 'ast1', title: 'Standup de ingeniería', category: 'videocall', startDate: date(4, 6), isAllDay: false, startTime: '09:00', endTime: '09:30' },
-  { id: 'ast2', title: '1:1 con Valentina Ríos', category: 'videocall', startDate: date(4, 6), isAllDay: false, startTime: '11:00', endTime: '12:00', organizer: people.valentina },
-  { id: 'ast3', title: 'Standup de ingeniería', category: 'videocall', startDate: date(4, 8), isAllDay: false, startTime: '09:00', endTime: '09:30' },
-  { id: 'ast4', title: 'Standup de ingeniería', category: 'videocall', startDate: date(4, 13), isAllDay: false, startTime: '09:00', endTime: '09:30' },
-  { id: 'ast5', title: '1:1 con Valentina Ríos', category: 'videocall', startDate: date(4, 14), isAllDay: false, startTime: '11:00', endTime: '11:30', organizer: people.valentina },
-  { id: 'ast6', title: 'Q2 Kickoff All Hands', category: 'company-event', startDate: date(4, 16), isAllDay: false, startTime: '10:00', endTime: '11:30' },
-  { id: 'ast7', title: 'Standup de ingeniería', category: 'videocall', startDate: date(4, 20), isAllDay: false, startTime: '09:00', endTime: '09:30' },
-  { id: 'ast8', title: 'Standup de ingeniería', category: 'videocall', startDate: date(4, 27), isAllDay: false, startTime: '09:00', endTime: '09:30' },
-  { id: 'ast9', title: '1:1 con Valentina Ríos', category: 'videocall', startDate: date(4, 27), isAllDay: false, startTime: '11:00', endTime: '11:30', organizer: people.valentina },
+  // April timed events - standups Mon/Thu, 1:1s Wed
+  { id: 'ast1', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 6), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  { id: 'ast2', title: '1:1 con Valentina Rios', category: 'videocall', startDate: date(4, 8), isAllDay: false, startTime: '11:00', endTime: '11:30', organizer: people.valentina },
+  { id: 'ast3', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 9), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  { id: 'ast4', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 13), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  { id: 'ast5', title: '1:1 con Valentina Rios', category: 'videocall', startDate: date(4, 15), isAllDay: false, startTime: '11:00', endTime: '11:30', organizer: people.valentina },
+  { id: 'ast6', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 16), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  { id: 'ast6b', title: 'Q2 Kickoff All Hands', category: 'company-event', startDate: date(4, 16), isAllDay: false, startTime: '10:00', endTime: '11:30' },
+  { id: 'ast7', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 20), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  { id: 'ast8', title: '1:1 con Valentina Rios', category: 'videocall', startDate: date(4, 22), isAllDay: false, startTime: '11:00', endTime: '11:30', organizer: people.valentina },
+  { id: 'ast9', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 23), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  { id: 'ast10', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 27), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  { id: 'ast11', title: '1:1 con Valentina Rios', category: 'videocall', startDate: date(4, 29), isAllDay: false, startTime: '11:00', endTime: '11:30', organizer: people.valentina },
+  { id: 'ast12', title: 'Standup de ingenieria', category: 'videocall', startDate: date(4, 30), isAllDay: false, startTime: '09:00', endTime: '09:30' },
+  
+  // Additional videocalls variety
+  { id: 'vc1', title: 'Sprint Planning', category: 'videocall', startDate: date(3, 19), isAllDay: false, startTime: '14:00', endTime: '15:00', organizer: people.carlos },
+  { id: 'vc2', title: 'Design Review', category: 'videocall', startDate: date(3, 20), isAllDay: false, startTime: '10:00', endTime: '10:30', organizer: people.sofia },
+  { id: 'vc3', title: 'Tech Debt Discussion', category: 'videocall', startDate: date(3, 23), isAllDay: false, startTime: '15:00', endTime: '16:00', organizer: people.roberto },
+  { id: 'vc4', title: 'Code Review Session', category: 'videocall', startDate: date(3, 25), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.juan },
+  { id: 'vc5', title: 'Product Sync', category: 'videocall', startDate: date(3, 26), isAllDay: false, startTime: '16:00', endTime: '16:30', organizer: people.carlos },
+  { id: 'vc6', title: 'Demo Friday', category: 'videocall', startDate: date(3, 28), isAllDay: false, startTime: '17:00', endTime: '18:00', organizer: people.valentina },
+  { id: 'vc7', title: 'Architecture Review', category: 'videocall', startDate: date(4, 8), isAllDay: false, startTime: '14:00', endTime: '15:00', organizer: people.roberto },
+  { id: 'vc8', title: 'Sprint Retro', category: 'videocall', startDate: date(4, 10), isAllDay: false, startTime: '16:00', endTime: '17:00', organizer: people.valentina },
+  { id: 'vc9', title: 'Demo Friday', category: 'videocall', startDate: date(4, 11), isAllDay: false, startTime: '17:00', endTime: '18:00', organizer: people.valentina },
+  { id: 'vc10', title: 'Product Roadmap Review', category: 'videocall', startDate: date(4, 17), isAllDay: false, startTime: '10:00', endTime: '11:00', organizer: people.carlos },
+  { id: 'vc11', title: 'Demo Friday', category: 'videocall', startDate: date(4, 25), isAllDay: false, startTime: '17:00', endTime: '18:00', organizer: people.valentina },
+  
+  // More onboarding tasks for today
+  { id: 'onb1', title: 'Configurar accesos VPN', category: 'onboarding', startDate: date(3, 19), isAllDay: true, description: 'Configurar acceso remoto a la red corporativa.' },
+  { id: 'onb2', title: 'Capacitacion herramientas internas', category: 'onboarding', startDate: date(3, 20), isAllDay: false, startTime: '10:00', endTime: '11:00' },
 ];
 
 // Tasks

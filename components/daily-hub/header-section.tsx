@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import { currentUser } from '@/lib/data';
-import { getGreeting, getGreetingEmoji, formatDate, TODAY } from '@/lib/utils';
+import { getGreeting, formatDate, TODAY } from '@/lib/utils';
 import { Sparkles, Flame } from 'lucide-react';
 
 export function HeaderSection() {
   const greeting = getGreeting();
-  const emoji = getGreetingEmoji();
   const firstName = currentUser.name.split(' ')[0];
   const [showStreakTooltip, setShowStreakTooltip] = useState(false);
   
@@ -17,10 +16,10 @@ export function HeaderSection() {
       <div className="flex items-center justify-between">
         <div>
           <h1 
-            className="text-2xl font-bold flex items-center gap-2"
+            className="text-2xl font-bold"
             style={{ color: '#182E7B' }}
           >
-            {greeting}, {firstName} {emoji}
+            {greeting}, {firstName}
           </h1>
           <p className="text-gray-500 text-sm mt-0.5 capitalize">
             {formatDate(TODAY, "EEEE, d 'de' MMMM 'de' yyyy")}

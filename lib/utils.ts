@@ -30,17 +30,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getGreeting(): string {
-  const hour = 9; // Fixed for demo - morning
+  const hour = new Date().getHours();
   if (hour < 12) return 'Buenos días';
   if (hour < 19) return 'Buenas tardes';
   return 'Buenas noches';
-}
-
-export function getGreetingEmoji(): string {
-  const hour = 9;
-  if (hour < 12) return '🌅';
-  if (hour < 19) return '☀️';
-  return '🌙';
 }
 
 export function formatDateRange(start: Date, end?: Date): string {

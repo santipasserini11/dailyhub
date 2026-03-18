@@ -1,11 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useCallback, useState, useRef } from 'react';
 import { useApp } from '@/lib/context';
 import { Task } from '@/lib/types';
-import { Avatar } from '@/components/ui/avatar';
 import { isOverdue, isDueToday, formatDate, cn } from '@/lib/utils';
-import { Check, Plus, PartyPopper } from 'lucide-react';
+import { Check, Plus, PartyPopper, Trash2 } from 'lucide-react';
 
 export function TasksSection() {
   const { tasks, toggleTask, openBottomSheet } = useApp();
@@ -27,6 +26,10 @@ export function TasksSection() {
     };
   }, [tasks]);
 
+  const handleToggle = useCallback((id: string) => {
+    toggleTask(id);
+  }, [toggleTask]);
+
   return (
     <section>
       <h2 className="text-lg font-semibold text-gray-800 mb-3">Mis tareas</h2>
@@ -39,17 +42,17 @@ export function TasksSection() {
             </div>
           </div>
           <p className="text-gray-700 font-medium">
-            ¡Cumpliste todas las tareas del día, felicitaciones! 🎉
+            Cumpliste todas las tareas del dia, felicitaciones!
           </p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="divide-y divide-gray-50">
             {activeTasks.map((task) => (
-              <TaskRow key={task.id} task={task} onToggle={() => toggleTask(task.id)} />
+              <TaskRow key={task.id} task={task} onToggle={() => handleToggle(task.id)} />
             ))}
             {completedTasks.map((task) => (
-              <TaskRow key={task.id} task={task} onToggle={() => toggleTask(task.id)} completed />
+              <TaskRow key={task.id} task={task} onToggle={() => handleToggle(task.id)} completed />
             ))}
           </div>
         </div>
@@ -70,8 +73,11 @@ export function TasksSection() {
 function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => void; completed?: boolean }) {
   const overdue = !completed && isOverdue(task.dueDate);
   const dueToday = !completed && isDueToday(task.dueDate);
+  const [swipeX, setSwipeX] = useState(0);
+  const [swiping, setSwiping] = useState(false);
+  const startXRef = useRef(0);
 
-  const getDueBadge = () => {
+  const getDueBadge = useCallback(() => {
     if (completed && task.completedDate) {
       return {
         text: `Completada ${formatDate(task.completedDate, "d MMM")}`,
@@ -94,55 +100,101 @@ function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => vo
       text: formatDate(task.dueDate, "MMM d"),
       className: 'bg-gray-100 text-gray-600',
     };
-  };
+  }, [completed, task.completedDate, task.dueDate, overdue, dueToday]);
 
   const badge = getDueBadge();
 
-  return (
-    <div 
-      className={cn(
-        'flex items-start gap-3 p-3',
-        completed && 'opacity-50',
-        overdue && 'border-l-2 border-l-red-500'
-      )}
-    >
-      <button
-        onClick={onToggle}
-        className={cn(
-          'w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors',
-          completed 
-            ? 'bg-green-500 border-green-500' 
-            : 'border-gray-300 hover:border-gray-400'
-        )}
-      >
-        {completed && <Check className="w-3 h-3 text-white" />}
-      </button>
-      
-      <div className="flex-1 min-w-0">
-        <p className={cn(
-          'text-sm font-medium text-gray-800',
-          completed && 'line-through'
-        )}>
-          {task.title}
-        </p>
-        <div className="flex items-center gap-2 mt-1 flex-wrap">
-          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-            {task.tag}
-          </span>
-          {task.assignedBy ? (
-            <div className="flex items-center gap-1">
-              <Avatar name={task.assignedBy.name} size="sm" />
-              <span className="text-xs text-gray-500">{task.assignedBy.name}</span>
-            </div>
-          ) : (
-            <span className="text-xs text-gray-500">Creada por mí</span>
-          )}
-        </div>
-      </div>
+  // Swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startXRef.current = e.touches[0].clientX;
+    setSwiping(true);
+  };
 
-      <span className={cn('text-xs px-2 py-0.5 rounded-full shrink-0', badge.className)}>
-        {badge.text}
-      </span>
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!swiping) return;
+    const diff = e.touches[0].clientX - startXRef.current;
+    // Limit swipe distance
+    const limitedDiff = Math.max(-80, Math.min(80, diff));
+    setSwipeX(limitedDiff);
+  };
+
+  const handleTouchEnd = () => {
+    if (swipeX > 60) {
+      // Swipe right - complete
+      onToggle();
+    }
+    // Swipe left - delete (would need delete handler)
+    setSwipeX(0);
+    setSwiping(false);
+  };
+
+  return (
+    <div className="relative overflow-hidden">
+      {/* Swipe actions background */}
+      <div className="absolute inset-y-0 left-0 w-20 bg-green-500 flex items-center justify-center">
+        <Check className="w-5 h-5 text-white" />
+      </div>
+      <div className="absolute inset-y-0 right-0 w-20 bg-red-500 flex items-center justify-center">
+        <Trash2 className="w-5 h-5 text-white" />
+      </div>
+      
+      {/* Main content */}
+      <div 
+        className={cn(
+          'flex items-start gap-3 p-3 bg-white relative transition-transform',
+          completed && 'opacity-50',
+          overdue && 'border-l-2 border-l-red-500'
+        )}
+        style={{ transform: `translateX(${swipeX}px)` }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <button
+          onClick={onToggle}
+          className={cn(
+            'w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors',
+            completed 
+              ? 'bg-green-500 border-green-500' 
+              : 'border-gray-300 hover:border-gray-400'
+          )}
+        >
+          {completed && <Check className="w-3 h-3 text-white" />}
+        </button>
+        
+        <div className="flex-1 min-w-0">
+          <p className={cn(
+            'text-sm font-medium text-gray-800',
+            completed && 'line-through'
+          )}>
+            {task.title}
+          </p>
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+              {task.tag}
+            </span>
+            {task.createdByMe ? (
+              <span 
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{ backgroundColor: '#EEF2FF', color: '#496BE3' }}
+              >
+                Creada por mi
+              </span>
+            ) : task.assignedBy && (
+              <span 
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{ backgroundColor: '#FEF3C7', color: '#D97706' }}
+              >
+                Asignada por {task.assignedBy.name.split(' ')[0]}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <span className={cn('text-xs px-2 py-0.5 rounded-full shrink-0', badge.className)}>
+          {badge.text}
+        </span>
+      </div>
     </div>
   );
 }

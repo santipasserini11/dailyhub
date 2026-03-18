@@ -4,20 +4,17 @@ import { useState, useMemo } from 'react';
 import { useApp } from '@/lib/context';
 import { categoryColors, categoryIcons } from '@/lib/data';
 import { TODAY } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Video } from 'lucide-react';
 import { CalendarEvent } from '@/lib/types';
 
-// Categories to exclude from "Proximos eventos" section
-const EXCLUDED_CATEGORIES = new Set([
-  'vacation',
-  'medical-leave', 
+// Categories to include in "Proximos eventos" section
+const INCLUDED_CATEGORIES = new Set([
   'videocall',
-  'communication',
-  'company-event',
-  'training',
+  'onboarding',
   'performance',
   'survey',
-  'reminder'
+  'company-event',
+  'training',
 ]);
 
 export function EventsSection() {
@@ -26,8 +23,8 @@ export function EventsSection() {
 
   const todayEvents = useMemo(() => {
     return events.filter(event => {
-      // First filter out excluded categories
-      if (EXCLUDED_CATEGORIES.has(event.category)) {
+      // Only include specific categories
+      if (!INCLUDED_CATEGORIES.has(event.category)) {
         return false;
       }
       
@@ -41,9 +38,9 @@ export function EventsSection() {
       
       return todayTime >= startTime && todayTime <= endTime;
     }).sort((a, b) => {
-      // All-day events first, then by time
-      if (a.isAllDay && !b.isAllDay) return 1;
+      // Timed events first (by time), then all-day events
       if (!a.isAllDay && b.isAllDay) return -1;
+      if (a.isAllDay && !b.isAllDay) return 1;
       if (a.startTime && b.startTime) {
         return a.startTime.localeCompare(b.startTime);
       }
@@ -57,9 +54,9 @@ export function EventsSection() {
   if (todayEvents.length === 0) {
     return (
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Próximos eventos</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">Proximos eventos</h2>
         <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
-          <p className="text-gray-500">Tu agenda está libre por ahora ✨</p>
+          <p className="text-gray-500">Tu agenda esta libre por ahora</p>
         </div>
       </section>
     );
@@ -67,7 +64,7 @@ export function EventsSection() {
 
   return (
     <section>
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">Próximos eventos</h2>
+      <h2 className="text-lg font-semibold text-gray-800 mb-3">Proximos eventos</h2>
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden divide-y divide-gray-50">
         {displayedEvents.map((event) => (
           <EventRow key={event.id} event={event} onClick={() => openBottomSheet({ type: 'event', event })} />
@@ -89,24 +86,41 @@ export function EventsSection() {
 
 function EventRow({ event, onClick }: { event: CalendarEvent; onClick: () => void }) {
   const color = categoryColors[event.category] || '#6B7280';
-  const icon = categoryIcons[event.category] || '📅';
+  const icon = categoryIcons[event.category] || '';
+  const isVideocall = event.category === 'videocall';
   
   return (
-    <button
-      onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors text-left"
-    >
-      <div 
-        className="w-1 h-10 rounded-full shrink-0"
-        style={{ backgroundColor: color }}
-      />
-      <span className="text-lg">{icon}</span>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-800 truncate">{event.title}</p>
-        <p className="text-xs text-gray-500">
-          {event.isAllDay ? 'Todo el día' : `${event.startTime} – ${event.endTime}`}
-        </p>
-      </div>
-    </button>
+    <div className="flex items-center gap-3 p-3">
+      <button
+        onClick={onClick}
+        className="flex-1 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left rounded-lg -m-1 p-1"
+      >
+        <div 
+          className="w-1 h-10 rounded-full shrink-0"
+          style={{ backgroundColor: color }}
+        />
+        <span className="text-lg">{icon}</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-gray-800 truncate">{event.title}</p>
+          <p className="text-xs text-gray-500">
+            {event.isAllDay ? 'Todo el dia' : `${event.startTime} - ${event.endTime}`}
+          </p>
+        </div>
+      </button>
+      
+      {isVideocall && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            // Simulated join action
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg shrink-0 transition-colors"
+          style={{ backgroundColor: '#3B82F6', color: 'white' }}
+        >
+          <Video className="w-4 h-4" />
+          Unirse
+        </button>
+      )}
+    </div>
   );
 }

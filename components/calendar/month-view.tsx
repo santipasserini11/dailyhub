@@ -99,8 +99,10 @@ export function MonthView() {
           })}
         </div>
         
-        <div className="mt-6 text-center text-gray-500">
-          No hay eventos para este mes.
+        <div className="mt-6 text-center py-8 bg-white rounded-xl shadow-sm">
+          <div className="text-4xl mb-2">🎉</div>
+          <p className="text-gray-700 font-medium">Mes libre</p>
+          <p className="text-sm text-gray-500 mt-1">No hay eventos programados</p>
         </div>
       </div>
     );
