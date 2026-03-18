@@ -60,8 +60,8 @@ export function BottomNav() {
         badge={urgentCount}
       />
       <NavItem icon={<Newspaper className="w-5 h-5" />} label="Muro" />
-      <NavItem icon={<MessageSquare className="w-5 h-5" />} label="Chats" />
       <NavItem icon={<LayoutGrid className="w-5 h-5" />} label="Apps" />
+      <NavItem icon={<MessageSquare className="w-5 h-5" />} label="Chats" />
       <NavItem icon={<User className="w-5 h-5" />} label="Perfil" />
     </nav>
   );
