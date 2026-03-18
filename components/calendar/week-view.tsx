@@ -5,7 +5,7 @@ import { useApp } from '@/lib/context';
 import { getShiftForDate, isHoliday, categoryColors, categoryIcons } from '@/lib/data';
 import { TODAY, isPastDate, isTodayDate, cn, formatDate } from '@/lib/utils';
 import { startOfWeek, addDays, isSameDay } from 'date-fns';
-import { CalendarEvent } from '@/lib/types';
+
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7); // 7:00 to 20:00
 const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];

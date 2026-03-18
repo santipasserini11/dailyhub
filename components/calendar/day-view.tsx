@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { useApp } from '@/lib/context';
 import { categoryColors, categoryIcons, isHoliday } from '@/lib/data';
-import { isPastDate, isTodayDate, cn, formatDate } from '@/lib/utils';
+import { isPastDate, isTodayDate, cn } from '@/lib/utils';
 import { CalendarEvent } from '@/lib/types';
 
 export function DayView() {

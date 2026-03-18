@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useApp } from '@/lib/context';
-import { currentUser, holidays, isHoliday } from '@/lib/data';
+import { currentUser, isHoliday } from '@/lib/data';
 import { formatDate, TODAY } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 
