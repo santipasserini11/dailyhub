@@ -1,0 +1,173 @@
+'use client';
+
+import { useMemo } from 'react';
+import { useApp } from '@/lib/context';
+import { categoryColors } from '@/lib/data';
+import { TODAY, isPastDate, isTodayDate, cn } from '@/lib/utils';
+import { 
+  startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
+  addDays, isSameMonth, isSameDay 
+} from 'date-fns';
+
+const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+export function MonthView() {
+  const { selectedDate, setSelectedDate, setCalendarView, events, activeFilters } = useApp();
+  
+  const monthStart = startOfMonth(selectedDate);
+  const monthEnd = endOfMonth(selectedDate);
+  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
+  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
+
+  const filteredEvents = useMemo(() => {
+    return events.filter(e => activeFilters.has(e.category));
+  }, [events, activeFilters]);
+
+  // Generate all days in the calendar view
+  const weeks = useMemo(() => {
+    const result: Date[][] = [];
+    let current = calendarStart;
+    
+    while (current <= calendarEnd) {
+      const week: Date[] = [];
+      for (let i = 0; i < 7; i++) {
+        week.push(current);
+        current = addDays(current, 1);
+      }
+      result.push(week);
+    }
+    return result;
+  }, [calendarStart, calendarEnd]);
+
+  const getEventsForDay = (day: Date) => {
+    return filteredEvents.filter(event => {
+      const eventDate = new Date(event.startDate);
+      const eventEnd = event.endDate ? new Date(event.endDate) : eventDate;
+      
+      const dayTime = day.getTime();
+      const startTime = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate()).getTime();
+      const endTime = new Date(eventEnd.getFullYear(), eventEnd.getMonth(), eventEnd.getDate()).getTime();
+      
+      return dayTime >= startTime && dayTime <= endTime;
+    });
+  };
+
+  const handleDayClick = (day: Date) => {
+    setSelectedDate(day);
+    setCalendarView('dia');
+  };
+
+  // Check if we're viewing a month with no events (May+)
+  const hasEvents = weeks.some(week => 
+    week.some(day => isSameMonth(day, selectedDate) && getEventsForDay(day).length > 0)
+  );
+
+  if (activeFilters.size === 0) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-8">
+        <p className="text-gray-500 text-center">
+          No hay eventos. Activá los filtros para ver tu agenda.
+        </p>
+      </div>
+    );
+  }
+
+  if (!hasEvents && selectedDate.getMonth() >= 4) { // May onwards (0-indexed: 4 = May)
+    return (
+      <div className="flex-1">
+        {/* Calendar grid */}
+        <div className="grid grid-cols-7 gap-px bg-white rounded-xl overflow-hidden shadow-sm">
+          {/* Header */}
+          {DAY_LABELS.map((label) => (
+            <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-50">
+              {label}
+            </div>
+          ))}
+          
+          {/* Days */}
+          {weeks.flat().map((day, i) => {
+            const isCurrentMonth = isSameMonth(day, selectedDate);
+            
+            return (
+              <button
+                key={i}
+                onClick={() => handleDayClick(day)}
+                className={cn(
+                  'p-2 min-h-[48px] text-center transition-colors hover:bg-gray-50',
+                  !isCurrentMonth && 'opacity-30'
+                )}
+              >
+                <span className="text-sm text-gray-700">{day.getDate()}</span>
+              </button>
+            );
+          })}
+        </div>
+        
+        <div className="mt-6 text-center text-gray-500">
+          No hay eventos para este mes.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1">
+      {/* Calendar grid */}
+      <div className="grid grid-cols-7 gap-px bg-white rounded-xl overflow-hidden shadow-sm">
+        {/* Header */}
+        {DAY_LABELS.map((label) => (
+          <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-50">
+            {label}
+          </div>
+        ))}
+        
+        {/* Days */}
+        {weeks.flat().map((day, i) => {
+          const isCurrentMonth = isSameMonth(day, selectedDate);
+          const isPast = isPastDate(day);
+          const isToday = isTodayDate(day);
+          const dayEvents = getEventsForDay(day);
+          const uniqueCategories = [...new Set(dayEvents.map(e => e.category))];
+          const displayDots = uniqueCategories.slice(0, 3);
+          const moreCount = uniqueCategories.length - 3;
+
+          return (
+            <button
+              key={i}
+              onClick={() => handleDayClick(day)}
+              className={cn(
+                'p-1 min-h-[48px] flex flex-col items-center transition-colors hover:bg-gray-50',
+                !isCurrentMonth && 'opacity-30',
+                isPast && isCurrentMonth && !isToday && 'opacity-40'
+              )}
+            >
+              <span 
+                className={cn(
+                  'text-sm w-6 h-6 flex items-center justify-center rounded-full',
+                  isToday && 'text-white'
+                )}
+                style={{ backgroundColor: isToday ? '#496BE3' : undefined }}
+              >
+                {day.getDate()}
+              </span>
+              {dayEvents.length > 0 && (
+                <div className="flex items-center gap-0.5 mt-0.5">
+                  {displayDots.map((cat, j) => (
+                    <span 
+                      key={j}
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: categoryColors[cat] }}
+                    />
+                  ))}
+                  {moreCount > 0 && (
+                    <span className="text-[8px] text-gray-500">+{moreCount}</span>
+                  )}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
