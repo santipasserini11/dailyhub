@@ -7,7 +7,6 @@ import { VideocallSheet } from './videocall-sheet';
 import { ShiftSheet } from './shift-sheet';
 import { WhosOutSheet } from './whos-out-sheet';
 import { NewTaskSheet } from './new-task-sheet';
-import { NewReminderSheet } from './new-reminder-sheet';
 import { DayEventsSheet } from './day-events-sheet';
 import { formatDate } from '@/lib/utils';
 
@@ -28,8 +27,6 @@ export function BottomSheetManager() {
         return 'Ausentes hoy';
       case 'new-task':
         return 'Nueva tarea';
-      case 'new-reminder':
-        return 'Nuevo recordatorio';
       case 'day-events':
         return `Eventos del ${formatDate(bottomSheet.date, "d 'de' MMMM")}`;
     }
@@ -47,8 +44,6 @@ export function BottomSheetManager() {
         return <WhosOutSheet />;
       case 'new-task':
         return <NewTaskSheet />;
-      case 'new-reminder':
-        return <NewReminderSheet />;
       case 'day-events':
         return <DayEventsSheet date={bottomSheet.date} />;
     }

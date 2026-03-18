@@ -13,7 +13,7 @@ const DAY_LABELS = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
 
 // Categories to show in month view (same as all-day row)
 const CALENDAR_CATEGORIES = new Set([
-  'holiday', 'vacation', 'medical-leave', 'reminder', 
+  'holiday', 'vacation', 'medical-leave', 
   'performance', 'survey', 'onboarding', 'videocall',
   'birthday', 'anniversary', 'company-event', 'training'
 ]);

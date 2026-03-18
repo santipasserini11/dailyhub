@@ -13,7 +13,7 @@ const DAY_LABELS = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
 
 // Categories allowed in all-day row
 const ALL_DAY_CATEGORIES = new Set([
-  'holiday', 'vacation', 'medical-leave', 'reminder', 
+  'holiday', 'vacation', 'medical-leave', 
   'performance', 'survey', 'onboarding'
 ]);
 

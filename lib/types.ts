@@ -11,7 +11,6 @@ export type EventCategory =
   | 'task'
   | 'videocall'
   | 'communication'
-  | 'reminder'
   | 'medical-leave';
 
 export interface Person {

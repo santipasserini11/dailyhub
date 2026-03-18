@@ -2,19 +2,17 @@
 
 import { useState } from 'react';
 import { useApp } from '@/lib/context';
-import { Plus, X, ClipboardList, Bell, Calendar } from 'lucide-react';
+import { Plus, X, ClipboardList, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function FAB() {
   const [isOpen, setIsOpen] = useState(false);
   const { openBottomSheet } = useApp();
 
-  const handleAction = (action: 'task' | 'reminder' | 'event') => {
+  const handleAction = (action: 'task' | 'event') => {
     setIsOpen(false);
     if (action === 'task') {
       openBottomSheet({ type: 'new-task' });
-    } else if (action === 'reminder') {
-      openBottomSheet({ type: 'new-reminder' });
     }
     // 'event' does nothing as per spec
   };
@@ -32,14 +30,6 @@ export function FAB() {
         >
           <Calendar className="w-4 h-4 text-purple-500" />
           <span className="text-sm font-medium text-gray-700">Nuevo Evento</span>
-        </button>
-        
-        <button
-          onClick={() => handleAction('reminder')}
-          className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
-        >
-          <Bell className="w-4 h-4 text-purple-500" />
-          <span className="text-sm font-medium text-gray-700">Nuevo Recordatorio</span>
         </button>
         
         <button

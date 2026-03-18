@@ -27,7 +27,6 @@ interface AppState {
   closeBottomSheet: () => void;
   
   events: CalendarEvent[];
-  addReminder: (reminder: Omit<CalendarEvent, 'id'>) => void;
 }
 
 export type BottomSheetState = 
@@ -36,7 +35,6 @@ export type BottomSheetState =
   | { type: 'shift'; date: Date }
   | { type: 'whos-out' }
   | { type: 'new-task' }
-  | { type: 'new-reminder' }
   | { type: 'day-events'; date: Date };
 
 const AppContext = createContext<AppState | null>(null);
@@ -47,7 +45,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [calendarView, setCalendarView] = useState<CalendarViewMode>('semana');
   const [selectedDate, setSelectedDate] = useState<Date>(TODAY);
   const [activeFilters, setActiveFilters] = useState<Set<string>>(
-    new Set(['birthday', 'anniversary', 'holiday', 'vacation', 'medical-leave', 'company-event', 'performance', 'survey', 'training', 'onboarding', 'task', 'videocall', 'communication', 'reminder'])
+    new Set(['birthday', 'anniversary', 'holiday', 'vacation', 'medical-leave', 'company-event', 'performance', 'survey', 'training', 'onboarding', 'task', 'videocall', 'communication'])
   );
   const [bottomSheet, setBottomSheet] = useState<BottomSheetState | null>(null);
   const [allEvents, setAllEvents] = useState<CalendarEvent[]>(events);
@@ -88,13 +86,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const openBottomSheet = (sheet: BottomSheetState) => setBottomSheet(sheet);
   const closeBottomSheet = () => setBottomSheet(null);
 
-  const addReminder = (reminder: Omit<CalendarEvent, 'id'>) => {
-    const newReminder: CalendarEvent = {
-      ...reminder,
-      id: `reminder-${Date.now()}`,
-    };
-    setAllEvents(prev => [...prev, newReminder]);
-  };
+  
 
   return (
     <AppContext.Provider value={{
@@ -113,7 +105,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       openBottomSheet,
       closeBottomSheet,
       events: allEvents,
-      addReminder,
     }}>
       {children}
     </AppContext.Provider>

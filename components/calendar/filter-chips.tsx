@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 const filterCategories = [
   'birthday', 'holiday', 'vacation', 'company-event', 'performance', 
-  'survey', 'training', 'onboarding', 'task', 'videocall', 'communication', 'reminder'
+  'survey', 'training', 'onboarding', 'task', 'videocall', 'communication'
 ];
 
 export function FilterChips() {
