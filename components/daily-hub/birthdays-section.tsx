@@ -25,34 +25,40 @@ export function BirthdaysSection() {
       <h2 className="text-lg font-semibold text-gray-800 mb-3">Cumpleanos y aniversarios</h2>
       
       <div className="space-y-2">
-        {todayCelebrations.map((event) => (
-          <div key={event.id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
-            <Avatar 
-              name={event.person?.name || 'Usuario'} 
-              initials={event.person?.avatar}
-              size="lg" 
-            />
-            <div className="flex-1">
-              <p className="font-medium text-gray-800">{event.person?.name}</p>
-              <p className="text-sm text-gray-500">{event.person?.role}</p>
-              <span 
-                className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: '#FDF2F8', color: '#EC4899' }}
+        {todayCelebrations.map((event) => {
+          const isBirthday = event.category === 'birthday';
+          
+          return (
+            <div key={event.id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
+              <Avatar 
+                name={event.person?.name || 'Usuario'} 
+                initials={event.person?.avatar}
+                size="lg" 
+              />
+              <div className="flex-1">
+                <p className="font-medium text-gray-800">{event.person?.name}</p>
+                <span 
+                  className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full"
+                  style={{ 
+                    backgroundColor: isBirthday ? '#FDF2F8' : '#FEF3C7',
+                    color: isBirthday ? '#EC4899' : '#D97706'
+                  }}
+                >
+                  {isBirthday 
+                    ? '🎂 Cumpleanos'
+                    : `🎉 ${event.yearsInCompany} anos en la empresa`
+                  }
+                </span>
+              </div>
+              <button
+                className="px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+                style={{ backgroundColor: '#EEF2FF', color: '#496BE3' }}
               >
-                {event.category === 'anniversary' 
-                  ? `${event.yearsInCompany} anos en la empresa`
-                  : 'Cumpleanos'
-                }
-              </span>
+                Felicitar
+              </button>
             </div>
-            <button
-              className="px-4 py-2 text-sm font-medium rounded-lg transition-colors"
-              style={{ backgroundColor: '#EEF2FF', color: '#496BE3' }}
-            >
-              Felicitar
-            </button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
