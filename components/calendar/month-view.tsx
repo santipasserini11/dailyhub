@@ -97,7 +97,9 @@ export function MonthView() {
           ))}
           
           {weeks.flat().map((day, i) => {
-            const isCurrentMonth = isSameMonth(day, selectedDate);
+            const prevDay = i > 0 ? weeks.flat()[i - 1] : null;
+            const isMonthBoundary = prevDay && !isSameMonth(day, prevDay);
+            const isInSameRowAsBoundary = isMonthBoundary && (i % 7 !== 0);
             
             return (
               <button
@@ -105,7 +107,7 @@ export function MonthView() {
                 onClick={() => handleDayClick(day)}
                 className={cn(
                   'p-2 min-h-[48px] text-center transition-colors hover:bg-gray-100',
-                  !isCurrentMonth && 'opacity-30'
+                  isInSameRowAsBoundary && 'border-l-2 border-gray-300'
                 )}
                 style={{ backgroundColor: getCellBg(day, isPastDate(day)) }}
               >
@@ -143,14 +145,19 @@ export function MonthView() {
           const uniqueCategories = [...new Set(dayEvents.map(e => e.category))];
           const displayDots = uniqueCategories.slice(0, 3);
           const moreCount = uniqueCategories.length - 3;
+          
+          // Check if this day is the first of a different month (needs left border)
+          const prevDay = i > 0 ? weeks.flat()[i - 1] : null;
+          const isMonthBoundary = prevDay && !isSameMonth(day, prevDay);
+          const isInSameRowAsBoundary = isMonthBoundary && (i % 7 !== 0);
 
           return (
             <button
               key={i}
               onClick={() => handleDayClick(day)}
               className={cn(
-                'p-1 min-h-[48px] flex flex-col items-center transition-colors hover:opacity-80',
-                !isCurrentMonth && 'opacity-30'
+                'p-1 min-h-[48px] flex flex-col items-center transition-colors hover:opacity-80 relative',
+                isInSameRowAsBoundary && 'border-l-2 border-gray-300'
               )}
               style={{ backgroundColor: getCellBg(day, isPast && !isToday) }}
               title={holidayName || undefined}
