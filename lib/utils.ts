@@ -1,5 +1,7 @@
 import { format, isToday, isBefore, isSameDay, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export const TODAY = new Date(2026, 2, 19); // March 19, 2026
 
@@ -23,8 +25,8 @@ export function isDueToday(date: Date): boolean {
   return isSameDay(date, TODAY);
 }
 
-export function cn(...classes: (string | undefined | false | null)[]): string {
-  return classes.filter(Boolean).join(' ');
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 
 export function getGreeting(): string {
