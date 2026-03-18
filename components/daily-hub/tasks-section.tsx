@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useApp } from '@/lib/context';
 import { Task } from '@/lib/types';
 import { Avatar } from '@/components/ui/avatar';
-import { isOverdue, isDueToday, formatDate, cn, TODAY } from '@/lib/utils';
+import { isOverdue, isDueToday, formatDate, cn } from '@/lib/utils';
 import { Check, Plus, PartyPopper } from 'lucide-react';
 
 export function TasksSection() {

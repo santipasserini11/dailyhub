@@ -5,11 +5,13 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
   variable: "--font-comfortaa",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

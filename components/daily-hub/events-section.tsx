@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useApp } from '@/lib/context';
 import { categoryColors, categoryIcons } from '@/lib/data';
-import { TODAY, isTodayDate, cn } from '@/lib/utils';
+import { TODAY } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import { CalendarEvent } from '@/lib/types';
 
