@@ -32,6 +32,9 @@ export function DayEventsSheet({ date }: DayEventsSheetProps) {
     return events
       .filter(e => activeFilters.has(e.category))
       .filter(event => {
+        // Only show all-day events, not timed events like meetings
+        if (!event.isAllDay) return false;
+        
         const eventDate = new Date(event.startDate);
         const eventEnd = event.endDate ? new Date(event.endDate) : eventDate;
         
@@ -41,14 +44,7 @@ export function DayEventsSheet({ date }: DayEventsSheetProps) {
         
         return dayTime >= startTime && dayTime <= endTime;
       })
-      .sort((a, b) => {
-        if (a.isAllDay && !b.isAllDay) return -1;
-        if (!a.isAllDay && b.isAllDay) return 1;
-        if (a.startTime && b.startTime) {
-          return a.startTime.localeCompare(b.startTime);
-        }
-        return 0;
-      });
+      .sort((a, b) => a.title.localeCompare(b.title));
   }, [events, activeFilters, date]);
 
   return (
