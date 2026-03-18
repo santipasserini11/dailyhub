@@ -39,16 +39,17 @@ interface CategoryIconProps {
   category: string;
   className?: string;
   size?: number;
+  style?: React.CSSProperties;
 }
 
-export function CategoryIcon({ category, className, size = 16 }: CategoryIconProps) {
+export function CategoryIcon({ category, className, size = 16, style }: CategoryIconProps) {
   const Icon = iconMap[category];
   
   if (!Icon) {
     return null;
   }
   
-  return <Icon className={cn('shrink-0', className)} size={size} />;
+  return <Icon className={cn('shrink-0', className)} size={size} style={style} />;
 }
 
 // Export the map for direct access if needed

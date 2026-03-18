@@ -179,6 +179,7 @@ export const events: CalendarEvent[] = [
   
   // Communication today
   { id: 't-9', title: 'Recordatorio: completa la encuesta hoy', category: 'communication', startDate: date(3, 19), isAllDay: true, organizer: people.rrhh },
+  { id: 't-10', title: 'Nuevo post: Tips para home office efectivo', category: 'communication', startDate: date(3, 19), isAllDay: true, organizer: people.bienestar },
   
   // March 20 (Friday)
   { id: 'm20-1', title: 'Daily Standup', category: 'videocall', startDate: date(3, 20), isAllDay: false, startTime: '09:00', endTime: '09:15', organizer: people.elena },
@@ -189,8 +190,9 @@ export const events: CalendarEvent[] = [
   { id: 'm20-6', title: 'Capacitacion herramientas internas', category: 'onboarding', startDate: date(3, 20), isAllDay: false, startTime: '10:00', endTime: '11:00' },
   
   // Week 4: March 23-27
-  // March 21 (Saturday)
+  // March 21 (Saturday) - Communications
   { id: 'm21-1', title: 'Nuevo beneficio: viernes cortos en julio', category: 'communication', startDate: date(3, 21), isAllDay: true, organizer: people.rrhh },
+  { id: 'm21-2', title: 'Noticia: Ganamos premio a mejor lugar para trabajar', category: 'communication', startDate: date(3, 21), isAllDay: true, organizer: people.humand },
   
   // March 22 (Sunday)
   { id: 'm22-1', title: 'Cumpleanos Carlos Lopez', category: 'birthday', startDate: date(3, 22), isAllDay: true, person: people.carlos },
@@ -222,6 +224,7 @@ export const events: CalendarEvent[] = [
   
   // March 27 (Friday)
   { id: 'm27-1', title: 'Daily Standup', category: 'videocall', startDate: date(3, 27), isAllDay: false, startTime: '09:00', endTime: '09:15', organizer: people.elena },
+  { id: 'm27-comm1', title: 'Post: Resultados encuesta de clima Q1', category: 'communication', startDate: date(3, 27), isAllDay: true, organizer: people.rrhh },
   { id: 'm27-2', title: 'Retrospectiva fin de Q1', category: 'company-event', startDate: date(3, 27), isAllDay: false, startTime: '15:00', endTime: '16:00' },
   { id: 'm27-3', title: 'Demo Friday', category: 'videocall', startDate: date(3, 27), isAllDay: false, startTime: '17:00', endTime: '18:00', organizer: people.valentina },
   { id: 'm27-4', title: 'Knowledge Sharing', category: 'videocall', startDate: date(3, 27), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.pablo },
@@ -259,6 +262,7 @@ export const events: CalendarEvent[] = [
   
   // April 6 (Monday)
   { id: 'a6-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(4, 6), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
+  { id: 'a6-comm1', title: 'Post: Bienvenidos de vuelta! Objetivos Q2', category: 'communication', startDate: date(4, 6), isAllDay: true, organizer: people.carlos },
   { id: 'a6-2', title: 'Sprint Planning Q2', category: 'videocall', startDate: date(4, 6), isAllDay: false, startTime: '10:00', endTime: '11:30', organizer: people.carlos },
   { id: 'a6-3', title: 'Tech Debt Discussion', category: 'videocall', startDate: date(4, 6), isAllDay: false, startTime: '14:00', endTime: '15:00', organizer: people.pablo },
   { id: 'a6-4', title: 'Backend Sync', category: 'videocall', startDate: date(4, 6), isAllDay: false, startTime: '15:30', endTime: '16:00', organizer: people.fernando },
@@ -294,6 +298,11 @@ export const events: CalendarEvent[] = [
   { id: 'a10-4', title: 'Demo Friday', category: 'videocall', startDate: date(4, 10), isAllDay: false, startTime: '17:00', endTime: '18:00', organizer: people.valentina },
   { id: 'a10-5', title: 'Knowledge Sharing', category: 'videocall', startDate: date(4, 10), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.pablo },
   
+  // Efemeride: Company Anniversary in April
+  { id: 'efem-1', title: 'Aniversario de la Empresa - 8 anos', category: 'company-event', startDate: date(4, 12), isAllDay: true, description: 'Celebramos 8 anos de Humand' },
+  { id: 'efem-1-comm', title: 'Hoy cumplimos 8 anos! Gracias por ser parte', category: 'communication', startDate: date(4, 12), isAllDay: true, organizer: people.humand },
+  { id: 'efem-1-party', title: 'Fiesta Aniversario Empresa', category: 'company-event', startDate: date(4, 12), isAllDay: false, startTime: '18:00', endTime: '20:00' },
+
   // April 13-17 Week
   { id: 'a13-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(4, 13), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
   { id: 'a13-2', title: 'Sprint Planning', category: 'videocall', startDate: date(4, 13), isAllDay: false, startTime: '10:00', endTime: '11:30', organizer: people.carlos },

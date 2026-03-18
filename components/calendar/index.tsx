@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '@/lib/context';
 import { CalendarNav } from './calendar-nav';
+import { CalendarSearch } from './calendar-search';
 import { FilterChips } from './filter-chips';
 import { WeekView } from './week-view';
 import { MonthView } from './month-view';
@@ -27,6 +28,7 @@ export function Calendar() {
   return (
     <div className="flex-1 overflow-hidden flex flex-col bg-[#F5F6FA]">
       <div className="p-4 space-y-3 bg-white border-b border-gray-100">
+        <CalendarSearch />
         <CalendarNav />
         <FilterChips />
       </div>
