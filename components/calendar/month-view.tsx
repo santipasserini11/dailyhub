@@ -3,16 +3,16 @@
 import { useMemo } from 'react';
 import { useApp } from '@/lib/context';
 import { categoryColors } from '@/lib/data';
-import { TODAY, isPastDate, isTodayDate, cn } from '@/lib/utils';
+import { isPastDate, isTodayDate, cn } from '@/lib/utils';
 import { 
   startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
-  addDays, isSameMonth, isSameDay 
+  addDays, isSameMonth
 } from 'date-fns';
 
 const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
 export function MonthView() {
-  const { selectedDate, setSelectedDate, events, activeFilters, openBottomSheet } = useApp();
+  const { selectedDate, events, activeFilters, openBottomSheet } = useApp();
   
   const monthStart = startOfMonth(selectedDate);
   const monthEnd = endOfMonth(selectedDate);
@@ -53,11 +53,7 @@ export function MonthView() {
   };
 
   const handleDayClick = (day: Date) => {
-    setSelectedDate(day);
-    const dayEvents = getEventsForDay(day);
-    if (dayEvents.length > 0) {
-      openBottomSheet({ type: 'day-events', date: day });
-    }
+    openBottomSheet({ type: 'day-events', date: day });
   };
 
   // Check if we're viewing a month with no events (May+)
@@ -69,25 +65,22 @@ export function MonthView() {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
         <p className="text-gray-500 text-center">
-          No hay eventos. Activá los filtros para ver tu agenda.
+          No hay eventos. Activa los filtros para ver tu agenda.
         </p>
       </div>
     );
   }
 
-  if (!hasEvents && selectedDate.getMonth() >= 4) { // May onwards (0-indexed: 4 = May)
+  if (!hasEvents && selectedDate.getMonth() >= 4) {
     return (
       <div className="flex-1">
-        {/* Calendar grid */}
         <div className="grid grid-cols-7 gap-px bg-white rounded-xl overflow-hidden shadow-sm">
-          {/* Header */}
           {DAY_LABELS.map((label) => (
             <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-50">
               {label}
             </div>
           ))}
           
-          {/* Days */}
           {weeks.flat().map((day, i) => {
             const isCurrentMonth = isSameMonth(day, selectedDate);
             
@@ -115,16 +108,13 @@ export function MonthView() {
 
   return (
     <div className="flex-1">
-      {/* Calendar grid */}
       <div className="grid grid-cols-7 gap-px bg-white rounded-xl overflow-hidden shadow-sm">
-        {/* Header */}
         {DAY_LABELS.map((label) => (
           <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-50">
             {label}
           </div>
         ))}
         
-        {/* Days */}
         {weeks.flat().map((day, i) => {
           const isCurrentMonth = isSameMonth(day, selectedDate);
           const isPast = isPastDate(day);
