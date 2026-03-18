@@ -6,8 +6,7 @@ import { TODAY, formatDate, cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { 
   startOfWeek, endOfWeek, addWeeks, subWeeks,
-  startOfMonth, endOfMonth, addMonths, subMonths,
-  addDays, subDays, isSameMonth
+  addMonths, subMonths, isSameMonth
 } from 'date-fns';
 import { CalendarViewMode } from '@/lib/types';
 
@@ -18,9 +17,6 @@ export function CalendarNav() {
 
   const goPrev = () => {
     switch (calendarView) {
-      case 'dia':
-        setSelectedDate(subDays(selectedDate, 1));
-        break;
       case 'semana':
         setSelectedDate(subWeeks(selectedDate, 1));
         break;
@@ -32,9 +28,6 @@ export function CalendarNav() {
 
   const goNext = () => {
     switch (calendarView) {
-      case 'dia':
-        setSelectedDate(addDays(selectedDate, 1));
-        break;
       case 'semana':
         setSelectedDate(addWeeks(selectedDate, 1));
         break;
@@ -46,8 +39,6 @@ export function CalendarNav() {
 
   const getDateRangeLabel = () => {
     switch (calendarView) {
-      case 'dia':
-        return formatDate(selectedDate, "EEEE d 'de' MMMM");
       case 'semana': {
         const start = startOfWeek(selectedDate, { weekStartsOn: 1 });
         const end = endOfWeek(selectedDate, { weekStartsOn: 1 });
@@ -71,7 +62,7 @@ export function CalendarNav() {
       {/* Calendar view mode toggle */}
       <div className="flex justify-center">
         <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-full">
-          {(['dia', 'semana', 'mes'] as CalendarViewMode[]).map((view) => (
+          {(['semana', 'mes'] as CalendarViewMode[]).map((view) => (
             <button
               key={view}
               onClick={() => setCalendarView(view)}

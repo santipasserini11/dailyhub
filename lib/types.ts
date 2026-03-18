@@ -65,4 +65,4 @@ export interface AbsentPerson extends Person {
 }
 
 export type ViewMode = 'inicio' | 'calendario';
-export type CalendarViewMode = 'dia' | 'semana' | 'mes';
+export type CalendarViewMode = 'semana' | 'mes';

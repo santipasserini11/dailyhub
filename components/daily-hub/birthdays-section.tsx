@@ -4,11 +4,12 @@ import { useMemo } from 'react';
 import { useApp } from '@/lib/context';
 import { Avatar } from '@/components/ui/avatar';
 import { TODAY, isTodayDate, formatDate } from '@/lib/utils';
+import { differenceInDays } from 'date-fns';
 
 export function BirthdaysSection() {
   const { events } = useApp();
 
-  const { todayBirthdays, nextBirthday } = useMemo(() => {
+  const { todayBirthdays, nextBirthday, daysUntilNext } = useMemo(() => {
     const birthdays = events.filter(e => 
       e.category === 'birthday' || e.category === 'anniversary'
     );
@@ -20,9 +21,13 @@ export function BirthdaysSection() {
       .filter(e => e.startDate > TODAY)
       .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
     
+    const next = future[0] || null;
+    const daysUntil = next ? differenceInDays(next.startDate, TODAY) : 0;
+    
     return {
       todayBirthdays: today,
-      nextBirthday: future[0] || null,
+      nextBirthday: next,
+      daysUntilNext: daysUntil,
     };
   }, [events]);
 
@@ -67,9 +72,12 @@ export function BirthdaysSection() {
         </div>
       ) : nextBirthday && (
         <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-gray-600">
-            🎂 Próximo: <span className="font-medium">{nextBirthday.person?.name}</span>{' '}
-            el {formatDate(nextBirthday.startDate, "EEEE d 'de' MMMM")}
+          <p className="text-gray-500">
+            <span className="text-gray-400">Próximamente:</span>{' '}
+            <span className="font-medium text-gray-600">{nextBirthday.person?.name}</span>{' '}
+            <span className="text-gray-400">
+              — en {daysUntilNext} {daysUntilNext === 1 ? 'día' : 'días'}
+            </span>
           </p>
         </div>
       )}

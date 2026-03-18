@@ -53,12 +53,12 @@ export const events: CalendarEvent[] = [
   { id: 'v4', title: 'Pedro Ibáñez — Licencia médica', category: 'medical-leave', startDate: date(3, 18), endDate: date(3, 25), isAllDay: true, person: people.pedro },
   
   // TODAY - March 19
-  { id: 't1', title: 'Standup de ingeniería', category: 'videocall', startDate: date(3, 19), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
+  { id: 't1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(3, 19), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
   { id: 't2', title: '1:1 con Valentina Ríos', category: 'videocall', startDate: date(3, 19), isAllDay: false, startTime: '11:00', endTime: '11:30', organizer: people.valentina },
   { id: 't3', title: 'Recordatorio: completá la encuesta hoy', category: 'communication', startDate: date(3, 19), isAllDay: true, organizer: people.rrhh, description: 'La encuesta de clima cierra hoy. Tu opinión es muy importante para nosotros.' },
   { id: 't4', title: 'Encuesta de clima — CIERRA', category: 'survey', startDate: date(3, 19), isAllDay: true, description: 'Última oportunidad para completar la encuesta de clima organizacional.' },
   { id: 't5', title: 'Meet Your Buddy', category: 'onboarding', startDate: date(3, 19), isAllDay: true, description: 'Sesión de bienvenida con tu buddy asignado.' },
-  { id: 't5b', title: 'Sesión Meet Your Buddy', category: 'onboarding', startDate: date(3, 19), isAllDay: false, startTime: '15:00', endTime: '15:30', organizer: people.valentina },
+  { id: 't5b', title: 'Firma de declaración jurada de domicilio', category: 'onboarding', startDate: date(3, 19), isAllDay: false, startTime: '15:00', endTime: '15:30', organizer: people.valentina },
   
   // Future - March
   { id: 'f1', title: 'All Hands Meeting', category: 'company-event', startDate: date(3, 20), isAllDay: true },

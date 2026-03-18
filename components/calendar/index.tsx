@@ -3,7 +3,6 @@
 import { useApp } from '@/lib/context';
 import { CalendarNav } from './calendar-nav';
 import { FilterChips } from './filter-chips';
-import { DayView } from './day-view';
 import { WeekView } from './week-view';
 import { MonthView } from './month-view';
 
@@ -18,7 +17,6 @@ export function Calendar() {
       </div>
       
       <div className="flex-1 overflow-auto p-4">
-        {calendarView === 'dia' && <DayView />}
         {calendarView === 'semana' && <WeekView />}
         {calendarView === 'mes' && <MonthView />}
       </div>

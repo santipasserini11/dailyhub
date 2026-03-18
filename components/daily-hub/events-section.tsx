@@ -7,12 +7,30 @@ import { TODAY } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import { CalendarEvent } from '@/lib/types';
 
+// Categories to exclude from "Proximos eventos" section
+const EXCLUDED_CATEGORIES = new Set([
+  'vacation',
+  'medical-leave', 
+  'videocall',
+  'communication',
+  'company-event',
+  'training',
+  'performance',
+  'survey',
+  'reminder'
+]);
+
 export function EventsSection() {
   const { events, openBottomSheet } = useApp();
   const [showAll, setShowAll] = useState(false);
 
   const todayEvents = useMemo(() => {
     return events.filter(event => {
+      // First filter out excluded categories
+      if (EXCLUDED_CATEGORIES.has(event.category)) {
+        return false;
+      }
+      
       const eventDate = new Date(event.startDate);
       const eventEnd = event.endDate ? new Date(event.endDate) : eventDate;
       
