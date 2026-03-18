@@ -16,10 +16,13 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
           {/* Notch */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-10" />
           
-          {/* Screen */}
-          <div className="relative bg-white rounded-[2rem] overflow-hidden min-h-[700px] max-h-[85vh]">
+          {/* Screen - this is the container for all app content including modals */}
+          <div 
+            id="phone-screen" 
+            className="relative bg-white rounded-[2rem] overflow-hidden min-h-[700px] max-h-[85vh] flex flex-col"
+          >
             {/* Status bar */}
-            <div className="flex items-center justify-between px-6 py-2 bg-white">
+            <div className="flex items-center justify-between px-6 py-2 bg-white relative z-10 shrink-0">
               <span className="text-xs font-semibold">9:41</span>
               <div className="flex items-center gap-1">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -37,10 +40,8 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
               </div>
             </div>
             
-            {/* App content */}
-            <div className="flex flex-col h-[calc(85vh-4rem)] overflow-hidden">
-              {children}
-            </div>
+            {/* App content - children includes all app components */}
+            {children}
           </div>
         </div>
         

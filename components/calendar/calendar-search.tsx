@@ -85,17 +85,17 @@ export function CalendarSearch() {
         </span>
       </button>
 
-      {/* Search modal */}
+      {/* Search modal - rendered outside via portal behavior, but contained in phone */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
+        <div className="absolute inset-0 z-50 flex items-start justify-center pt-12 rounded-[2rem] overflow-hidden">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40"
             onClick={() => { setIsOpen(false); setQuery(''); }}
           />
           
           {/* Modal */}
-          <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden">
+          <div className="relative w-[90%] bg-white rounded-2xl shadow-2xl overflow-hidden">
             {/* Search input */}
             <div className="flex items-center gap-3 p-4 border-b border-gray-100">
               <Search className="w-5 h-5 text-gray-400" />

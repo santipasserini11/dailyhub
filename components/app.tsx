@@ -22,22 +22,27 @@ export function App() {
 
   return (
     <PhoneFrame>
-      <TopBar />
+      {/* Main app wrapper - flex column to fill the phone screen */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <TopBar />
+        
+        {isLoading ? (
+          <div className="flex-1 overflow-y-auto bg-[#F5F6FA] p-4 space-y-4">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </div>
+        ) : (
+          <>
+            {viewMode === 'inicio' ? <DailyHub /> : <Calendar />}
+          </>
+        )}
+        
+        <BottomNav />
+      </div>
       
-      {isLoading ? (
-        <div className="flex-1 overflow-y-auto bg-[#F5F6FA] p-4 space-y-4">
-          <SkeletonCard />
-          <SkeletonCard />
-          <SkeletonCard />
-          <SkeletonCard />
-        </div>
-      ) : (
-        <>
-          {viewMode === 'inicio' ? <DailyHub /> : <Calendar />}
-        </>
-      )}
-      
-      <BottomNav />
+      {/* These are positioned absolute within the phone screen */}
       <FAB />
       <BottomSheetManager />
     </PhoneFrame>

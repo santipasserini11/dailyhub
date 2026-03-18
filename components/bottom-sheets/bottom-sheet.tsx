@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -12,21 +12,10 @@ interface BottomSheetProps {
 }
 
 export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetProps) {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="absolute inset-0 z-50 rounded-[2rem] overflow-hidden">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/40 transition-opacity"
@@ -36,7 +25,7 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
       {/* Sheet */}
       <div 
         className={cn(
-          'absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[85vh] overflow-hidden',
+          'absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[80%] overflow-hidden',
           'transform transition-transform duration-300 ease-out',
           'flex flex-col'
         )}

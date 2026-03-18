@@ -18,7 +18,7 @@ export function FAB() {
   };
 
   return (
-    <div className="fixed bottom-20 right-4 z-40">
+    <div className="absolute bottom-20 right-4 z-40">
       {/* Menu items */}
       <div className={cn(
         'absolute bottom-14 right-0 flex flex-col items-end gap-2 transition-all duration-200',
