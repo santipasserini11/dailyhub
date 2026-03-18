@@ -216,17 +216,21 @@ function TaskRow({ task, index, onToggle, completed }: { task: Task; index: numb
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
       >
-        {/* Checkbox visual */}
-        <div
+        {/* Checkbox - clickable */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle();
+          }}
           className={cn(
-            'w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5',
+            'w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 cursor-pointer transition-colors',
             completed 
               ? 'bg-green-500 border-green-500' 
-              : 'border-gray-300'
+              : 'border-gray-300 hover:border-green-400'
           )}
         >
           {completed && <Check className="w-3 h-3 text-white" />}
-        </div>
+        </button>
         
         <div className="flex-1 min-w-0">
           {/* Task title */}
