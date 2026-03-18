@@ -2,14 +2,21 @@
 
 import { useMemo } from 'react';
 import { useApp } from '@/lib/context';
-import { categoryColors } from '@/lib/data';
+import { categoryColors, isHoliday, getHolidayName } from '@/lib/data';
 import { isPastDate, isTodayDate, cn } from '@/lib/utils';
 import { 
   startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
-  addDays, isSameMonth
+  addDays, isSameMonth, isWeekend
 } from 'date-fns';
 
-const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const DAY_LABELS = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
+
+// Categories to show in month view (same as all-day row)
+const CALENDAR_CATEGORIES = new Set([
+  'holiday', 'vacation', 'medical-leave', 'reminder', 
+  'performance', 'survey', 'onboarding', 'videocall',
+  'birthday', 'anniversary', 'company-event', 'training'
+]);
 
 export function MonthView() {
   const { selectedDate, events, activeFilters, openBottomSheet } = useApp();
@@ -20,10 +27,11 @@ export function MonthView() {
   const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
 
   const filteredEvents = useMemo(() => {
-    return events.filter(e => activeFilters.has(e.category));
+    return events.filter(e => 
+      activeFilters.has(e.category) && CALENDAR_CATEGORIES.has(e.category)
+    );
   }, [events, activeFilters]);
 
-  // Generate all days in the calendar view
   const weeks = useMemo(() => {
     const result: Date[][] = [];
     let current = calendarStart;
@@ -56,7 +64,14 @@ export function MonthView() {
     openBottomSheet({ type: 'day-events', date: day });
   };
 
-  // Check if we're viewing a month with no events (May+)
+  // Get cell background color
+  const getCellBg = (day: Date) => {
+    const holiday = isHoliday(day);
+    if (holiday) return '#FEFCE8'; // Yellow for holidays
+    if (isWeekend(day)) return '#F3F4F6'; // Gray for weekends
+    return '#F9FAFB'; // Slight gray for workdays
+  };
+
   const hasEvents = weeks.some(week => 
     week.some(day => isSameMonth(day, selectedDate) && getEventsForDay(day).length > 0)
   );
@@ -74,9 +89,9 @@ export function MonthView() {
   if (!hasEvents && selectedDate.getMonth() >= 4) {
     return (
       <div className="flex-1">
-        <div className="grid grid-cols-7 gap-px bg-white rounded-xl overflow-hidden shadow-sm">
+        <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-xl overflow-hidden shadow-sm">
           {DAY_LABELS.map((label) => (
-            <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-50">
+            <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-100">
               {label}
             </div>
           ))}
@@ -89,9 +104,10 @@ export function MonthView() {
                 key={i}
                 onClick={() => handleDayClick(day)}
                 className={cn(
-                  'p-2 min-h-[48px] text-center transition-colors hover:bg-gray-50',
+                  'p-2 min-h-[48px] text-center transition-colors hover:bg-gray-100',
                   !isCurrentMonth && 'opacity-30'
                 )}
+                style={{ backgroundColor: getCellBg(day) }}
               >
                 <span className="text-sm text-gray-700">{day.getDate()}</span>
               </button>
@@ -100,7 +116,7 @@ export function MonthView() {
         </div>
         
         <div className="mt-6 text-center py-8 bg-white rounded-xl shadow-sm">
-          <div className="text-4xl mb-2">🎉</div>
+          <div className="text-4xl mb-2">📅</div>
           <p className="text-gray-700 font-medium">Mes libre</p>
           <p className="text-sm text-gray-500 mt-1">No hay eventos programados</p>
         </div>
@@ -110,9 +126,9 @@ export function MonthView() {
 
   return (
     <div className="flex-1">
-      <div className="grid grid-cols-7 gap-px bg-white rounded-xl overflow-hidden shadow-sm">
+      <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-xl overflow-hidden shadow-sm">
         {DAY_LABELS.map((label) => (
-          <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-50">
+          <div key={label} className="p-2 text-center text-xs text-gray-500 font-medium bg-gray-100">
             {label}
           </div>
         ))}
@@ -122,6 +138,8 @@ export function MonthView() {
           const isPast = isPastDate(day);
           const isToday = isTodayDate(day);
           const dayEvents = getEventsForDay(day);
+          const holiday = isHoliday(day);
+          const holidayName = getHolidayName(day);
           const uniqueCategories = [...new Set(dayEvents.map(e => e.category))];
           const displayDots = uniqueCategories.slice(0, 3);
           const moreCount = uniqueCategories.length - 3;
@@ -131,20 +149,25 @@ export function MonthView() {
               key={i}
               onClick={() => handleDayClick(day)}
               className={cn(
-                'p-1 min-h-[48px] flex flex-col items-center transition-colors bg-gray-50 hover:bg-gray-100',
+                'p-1 min-h-[48px] flex flex-col items-center transition-colors hover:opacity-80',
                 !isCurrentMonth && 'opacity-30',
-                isPast && isCurrentMonth && !isToday && 'opacity-40'
+                isPast && isCurrentMonth && !isToday && 'opacity-50'
               )}
+              style={{ backgroundColor: getCellBg(day) }}
+              title={holidayName || undefined}
             >
-              <span 
-                className={cn(
-                  'text-sm w-6 h-6 flex items-center justify-center rounded-full',
-                  isToday && 'text-white'
-                )}
-                style={{ backgroundColor: isToday ? '#496BE3' : undefined }}
-              >
-                {day.getDate()}
-              </span>
+              <div className="flex items-center gap-0.5">
+                {holiday && <span className="text-[8px]">🏛️</span>}
+                <span 
+                  className={cn(
+                    'text-sm w-6 h-6 flex items-center justify-center rounded-full',
+                    isToday && 'text-white'
+                  )}
+                  style={{ backgroundColor: isToday ? '#496BE3' : undefined }}
+                >
+                  {day.getDate()}
+                </span>
+              </div>
               {dayEvents.length > 0 && (
                 <div className="flex items-center gap-0.5 mt-0.5">
                   {displayDots.map((cat, j) => (

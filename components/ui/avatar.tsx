@@ -5,11 +5,12 @@ import { cn } from '@/lib/utils';
 interface AvatarProps {
   name: string;
   initials?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
 }
 
 const sizeClasses = {
+  xs: 'w-5 h-5 text-[8px]',
   sm: 'w-6 h-6 text-[10px]',
   md: 'w-8 h-8 text-xs',
   lg: 'w-10 h-10 text-sm',

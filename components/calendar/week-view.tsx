@@ -3,25 +3,30 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useApp } from '@/lib/context';
 import { useCalendarDensity } from '@/lib/hooks';
-import { getShiftForDate, isHoliday, categoryColors, categoryIcons } from '@/lib/data';
+import { getShiftForDate, isHoliday, getHolidayName, categoryColors, categoryIcons } from '@/lib/data';
 import { TODAY, isPastDate, isTodayDate, cn } from '@/lib/utils';
-import { startOfWeek, addDays } from 'date-fns';
+import { startOfWeek, addDays, isWeekend, getDay } from 'date-fns';
 import { CalendarEvent } from '@/lib/types';
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7); // 7:00 to 20:00
 const DAY_LABELS = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
 
+// Categories allowed in all-day row
+const ALL_DAY_CATEGORIES = new Set([
+  'holiday', 'vacation', 'medical-leave', 'reminder', 
+  'performance', 'survey', 'onboarding'
+]);
+
 export function WeekView() {
   const { selectedDate, events, activeFilters, openBottomSheet } = useApp();
   const { density, eventMinHeight, showFullName, maxAllDayRows, nameMaxChars } = useCalendarDensity(activeFilters.size);
   
-  // Current time indicator
   const [currentTime, setCurrentTime] = useState(new Date());
   
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000); // Update every minute
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -42,44 +47,34 @@ export function WeekView() {
       const endTime = new Date(eventEnd.getFullYear(), eventEnd.getMonth(), eventEnd.getDate()).getTime();
       
       const isInRange = dayTime >= startTime && dayTime <= endTime;
-      return isInRange && event.isAllDay === allDay;
+      
+      // For all-day row, only show allowed categories
+      if (allDay) {
+        return isInRange && event.isAllDay && ALL_DAY_CATEGORIES.has(event.category);
+      }
+      
+      return isInRange && !event.isAllDay;
     });
   };
 
-  // Group similar all-day events (vacations, birthdays)
+  // Group similar all-day events (vacations)
   const groupAllDayEvents = (dayEvents: CalendarEvent[]) => {
     const grouped: { events: CalendarEvent[]; label: string; color: string; icon: string }[] = [];
     const vacations = dayEvents.filter(e => e.category === 'vacation' || e.category === 'medical-leave');
-    const birthdays = dayEvents.filter(e => e.category === 'birthday');
     const others = dayEvents.filter(e => 
-      e.category !== 'vacation' && e.category !== 'medical-leave' && e.category !== 'birthday'
+      e.category !== 'vacation' && e.category !== 'medical-leave'
     );
 
+    // Group vacations
     if (vacations.length > 1) {
       grouped.push({
         events: vacations,
-        label: `Vacaciones +${vacations.length}`,
+        label: `Vacaciones · ${vacations.length} personas`,
         color: categoryColors['vacation'],
-        icon: categoryIcons['vacation'],
+        icon: '🌴',
       });
     } else {
       vacations.forEach(e => grouped.push({
-        events: [e],
-        label: e.person?.name.split(' ')[0] || e.title,
-        color: categoryColors[e.category],
-        icon: categoryIcons[e.category],
-      }));
-    }
-
-    if (birthdays.length > 1) {
-      grouped.push({
-        events: birthdays,
-        label: `Cumpleanos +${birthdays.length}`,
-        color: categoryColors['birthday'],
-        icon: categoryIcons['birthday'],
-      });
-    } else {
-      birthdays.forEach(e => grouped.push({
         events: [e],
         label: e.person?.name.split(' ')[0] || e.title,
         color: categoryColors[e.category],
@@ -97,7 +92,15 @@ export function WeekView() {
     return grouped;
   };
 
-  // Calculate current time indicator position
+  // Get column background color
+  const getColumnBg = (day: Date) => {
+    const holiday = isHoliday(day);
+    if (holiday) return '#FEFCE8'; // Yellow for holidays
+    if (isWeekend(day)) return '#F3F4F6'; // Gray for weekends
+    return 'white';
+  };
+
+  // Current time indicator
   const currentHour = currentTime.getHours();
   const currentMinute = currentTime.getMinutes();
   const isCurrentWeek = weekDays.some(d => isTodayDate(d));
@@ -119,12 +122,15 @@ export function WeekView() {
   return (
     <div className="flex-1 overflow-auto">
       {/* Header row */}
-      <div className="sticky top-0 bg-white z-10 border-b border-gray-100">
+      <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
         <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px">
           <div className="p-1" />
           {weekDays.map((day, i) => {
             const isPast = isPastDate(day);
             const isToday = isTodayDate(day);
+            const holiday = isHoliday(day);
+            const holidayName = getHolidayName(day);
+            
             return (
               <div 
                 key={i}
@@ -132,14 +138,19 @@ export function WeekView() {
                   'p-1 text-center',
                   isPast && !isToday && 'opacity-40'
                 )}
+                style={{ backgroundColor: getColumnBg(day) }}
               >
-                <div className="text-[10px] text-gray-500">{DAY_LABELS[i]}</div>
+                <div className="text-[10px] text-gray-500 flex items-center justify-center gap-0.5">
+                  {holiday && <span>🏛️</span>}
+                  {DAY_LABELS[i]}
+                </div>
                 <div 
                   className={cn(
                     'text-sm font-medium',
                     isToday && 'w-6 h-6 rounded-full flex items-center justify-center mx-auto text-white'
                   )}
                   style={{ backgroundColor: isToday ? '#496BE3' : undefined }}
+                  title={holidayName || undefined}
                 >
                   {day.getDate()}
                 </div>
@@ -149,7 +160,7 @@ export function WeekView() {
         </div>
 
         {/* Shift strips */}
-        <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px border-t border-gray-50">
+        <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px border-t border-gray-100">
           <div className="p-1" />
           {weekDays.map((day, i) => {
             const shift = getShiftForDate(day);
@@ -164,15 +175,16 @@ export function WeekView() {
                   'p-1 text-[9px] text-gray-500 text-center rounded transition-colors',
                   isPast && !isTodayDate(day) && 'opacity-40'
                 )}
-                style={{ backgroundColor: 'rgba(73, 107, 227, 0.1)' }}
+                style={{ backgroundColor: getColumnBg(day) }}
               >
-                {shift ? (
-                  <span className="flex items-center justify-center gap-0.5">
-                    {holiday && '(F) '}
+                {shift && !holiday ? (
+                  <span className="flex items-center justify-center gap-0.5 px-1 py-0.5 rounded" style={{ backgroundColor: 'rgba(73, 107, 227, 0.1)' }}>
                     {shift.startTime.replace(':00', '')}-{shift.endTime.replace(':00', '')}
                   </span>
+                ) : holiday ? (
+                  <span className="text-amber-600">Feriado</span>
                 ) : (
-                  <span>Descanso</span>
+                  <span className="text-gray-400">Descanso</span>
                 )}
               </button>
             );
@@ -180,7 +192,7 @@ export function WeekView() {
         </div>
 
         {/* All-day events */}
-        <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px border-t border-gray-50">
+        <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px border-t border-gray-100">
           <div className="p-1 text-[9px] text-gray-400">Todo el dia</div>
           {weekDays.map((day, i) => {
             const dayEvents = getEventsForDay(day, true);
@@ -196,6 +208,7 @@ export function WeekView() {
                   'p-0.5 min-h-[40px]',
                   isPast && !isTodayDate(day) && 'opacity-40 grayscale'
                 )}
+                style={{ backgroundColor: getColumnBg(day) }}
               >
                 {displayGroups.map((group, idx) => (
                   <button
@@ -248,7 +261,7 @@ export function WeekView() {
 
         {HOURS.map((hour) => (
           <div key={hour} className="contents">
-            <div className="p-1 text-[9px] text-gray-400 text-right pr-2">
+            <div className="p-1 text-[9px] text-gray-400 text-right pr-2 bg-white">
               {hour}:00
             </div>
             {weekDays.map((day, dayIndex) => {
@@ -258,17 +271,21 @@ export function WeekView() {
                 return eventHour === hour;
               });
               const isPast = isPastDate(day);
+              const holiday = isHoliday(day);
 
               return (
                 <div 
                   key={dayIndex}
                   className={cn(
-                    'border-t border-gray-200 p-0.5 relative bg-gray-50',
+                    'border-t border-gray-200 p-0.5 relative',
                     isPast && !isTodayDate(day) && 'opacity-40 grayscale'
                   )}
-                  style={{ minHeight: eventMinHeight }}
+                  style={{ 
+                    minHeight: eventMinHeight,
+                    backgroundColor: getColumnBg(day),
+                  }}
                 >
-                  {timedEvents.map((event) => {
+                  {!holiday && timedEvents.map((event) => {
                     const displayName = showFullName 
                       ? event.title.slice(0, nameMaxChars) + (event.title.length > nameMaxChars ? '...' : '')
                       : '';

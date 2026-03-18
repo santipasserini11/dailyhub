@@ -48,6 +48,7 @@ export const events: CalendarEvent[] = [
   // Week 1: March 2-6
   // March 2 (Monday)
   { id: 'm2-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(3, 2), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
+  { id: 'm2-r1', title: 'Completar autoevaluacion', category: 'reminder', startDate: date(3, 2), isAllDay: true },
   { id: 'm2-2', title: 'Capacitacion Comunicacion Efectiva', category: 'training', startDate: date(3, 2), endDate: date(3, 6), isAllDay: true },
   { id: 'm2-3', title: 'Sprint Planning Q1', category: 'videocall', startDate: date(3, 2), isAllDay: false, startTime: '10:00', endTime: '11:30', organizer: people.carlos },
   { id: 'm2-4', title: 'Sync con Producto', category: 'videocall', startDate: date(3, 2), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.carlos },
@@ -70,6 +71,7 @@ export const events: CalendarEvent[] = [
   
   // March 5 (Thursday)
   { id: 'm5-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(3, 5), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
+  { id: 'm5-r1', title: 'Revisar objetivos Q2', category: 'reminder', startDate: date(3, 5), isAllDay: true },
   { id: 'm5-2', title: 'Evaluacion de desempeno — ABRE', category: 'performance', startDate: date(3, 5), isAllDay: true },
   { id: 'm5-3', title: 'Architecture Discussion', category: 'videocall', startDate: date(3, 5), isAllDay: false, startTime: '10:30', endTime: '11:30', organizer: people.roberto },
   { id: 'm5-4', title: 'QA Sync', category: 'videocall', startDate: date(3, 5), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.ana },
@@ -88,6 +90,7 @@ export const events: CalendarEvent[] = [
   // Week 2: March 9-13
   // March 9 (Monday)
   { id: 'm9-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(3, 9), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
+  { id: 'm9-r1', title: 'Completar autoevaluacion', category: 'reminder', startDate: date(3, 9), isAllDay: true },
   { id: 'm9-2', title: 'Sprint Planning', category: 'videocall', startDate: date(3, 9), isAllDay: false, startTime: '10:00', endTime: '11:30', organizer: people.carlos },
   { id: 'm9-3', title: '1:1 con Roberto', category: 'videocall', startDate: date(3, 9), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.roberto },
   { id: 'm9-4', title: 'Backend Sync', category: 'videocall', startDate: date(3, 9), isAllDay: false, startTime: '15:00', endTime: '15:30', organizer: people.luis },
@@ -110,6 +113,7 @@ export const events: CalendarEvent[] = [
   
   // March 12 (Thursday)
   { id: 'm12-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(3, 12), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
+  { id: 'm12-r1', title: 'Revisar objetivos Q2', category: 'reminder', startDate: date(3, 12), isAllDay: true },
   { id: 'm12-2', title: 'Architecture Review', category: 'videocall', startDate: date(3, 12), isAllDay: false, startTime: '10:30', endTime: '11:30', organizer: people.roberto },
   { id: 'm12-3', title: 'QA Planning', category: 'videocall', startDate: date(3, 12), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.ana },
   { id: 'm12-4', title: 'Product Demo Prep', category: 'videocall', startDate: date(3, 12), isAllDay: false, startTime: '15:00', endTime: '15:30', organizer: people.carlos },
@@ -132,6 +136,7 @@ export const events: CalendarEvent[] = [
   
   // March 16 (Monday)
   { id: 'm16-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(3, 16), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
+  { id: 'm16-r1', title: 'Completar autoevaluacion', category: 'reminder', startDate: date(3, 16), isAllDay: true },
   { id: 'm16-2', title: 'Sprint Planning', category: 'videocall', startDate: date(3, 16), isAllDay: false, startTime: '10:00', endTime: '11:30', organizer: people.carlos },
   { id: 'm16-3', title: 'Tech Lead Sync', category: 'videocall', startDate: date(3, 16), isAllDay: false, startTime: '14:00', endTime: '14:30', organizer: people.pablo },
   { id: 'm16-4', title: 'Backend Review', category: 'videocall', startDate: date(3, 16), isAllDay: false, startTime: '15:00', endTime: '15:30', organizer: people.fernando },
@@ -157,6 +162,9 @@ export const events: CalendarEvent[] = [
   { id: 't-bd1', title: 'Cumpleanos Lara Rodriguez', category: 'birthday', startDate: date(3, 19), isAllDay: true, person: people.lara },
   { id: 't-bd2', title: 'Cumpleanos Fernando Castro', category: 'birthday', startDate: date(3, 19), isAllDay: true, person: people.fernando },
   { id: 't-aniv', title: '2 anos en Humand', category: 'anniversary', startDate: date(3, 19), isAllDay: true, person: people.elena, yearsInCompany: 2 },
+  
+  // Reminder today
+  { id: 't-r1', title: 'Revisar objetivos Q2', category: 'reminder', startDate: date(3, 19), isAllDay: true },
   
   // Videocalls today
   { id: 't-1', title: 'Weekly: Dragon Squad', category: 'videocall', startDate: date(3, 19), isAllDay: false, startTime: '09:00', endTime: '09:30', organizer: people.valentina },
@@ -422,12 +430,14 @@ export const pastShiftData: Record<string, { workedHours: number; balance: numbe
   '2026-03-18': { workedHours: 8.0, balance: 0 },
 };
 
-// Holidays
-export const holidays = [
-  date(3, 24),
-  date(4, 2),
-  date(4, 3),
+// Holidays with names
+export const holidaysList: { date: Date; name: string }[] = [
+  { date: date(3, 24), name: 'Dia de la Memoria' },
+  { date: date(4, 2), name: 'Dia del Veterano y Caidos en Malvinas' },
+  { date: date(4, 3), name: 'Viernes Santo' },
 ];
+
+export const holidays = holidaysList.map(h => h.date);
 
 export const isHoliday = (checkDate: Date): boolean => {
   return holidays.some(h => 
@@ -435,6 +445,15 @@ export const isHoliday = (checkDate: Date): boolean => {
     h.getMonth() === checkDate.getMonth() &&
     h.getDate() === checkDate.getDate()
   );
+};
+
+export const getHolidayName = (checkDate: Date): string | null => {
+  const holiday = holidaysList.find(h => 
+    h.date.getFullYear() === checkDate.getFullYear() &&
+    h.date.getMonth() === checkDate.getMonth() &&
+    h.date.getDate() === checkDate.getDate()
+  );
+  return holiday?.name || null;
 };
 
 // Category color mapping

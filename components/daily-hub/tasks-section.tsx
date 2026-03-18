@@ -1,17 +1,18 @@
 'use client';
 
-import { useMemo, useCallback, useState, useRef } from 'react';
+import { useMemo, useCallback, useState, useRef, useEffect } from 'react';
 import { useApp } from '@/lib/context';
 import { Task } from '@/lib/types';
 import { isOverdue, isDueToday, formatDate, cn } from '@/lib/utils';
 import { Check, Plus, PartyPopper } from 'lucide-react';
+import { Avatar } from '@/components/ui/avatar';
 
 export function TasksSection() {
   const { tasks, toggleTask, openBottomSheet } = useApp();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { activeTasks, completedTasks, allCompleted } = useMemo(() => {
     const active = tasks.filter(t => !t.completed).sort((a, b) => {
-      // Overdue first, then today, then future
       const aOverdue = isOverdue(a.dueDate);
       const bOverdue = isOverdue(b.dueDate);
       if (aOverdue && !bOverdue) return -1;
@@ -26,9 +27,18 @@ export function TasksSection() {
     };
   }, [tasks]);
 
-  const handleToggle = useCallback((id: string) => {
+  const handleToggle = useCallback((id: string, index: number) => {
     toggleTask(id);
-  }, [toggleTask]);
+    // Smooth scroll to next pending task
+    setTimeout(() => {
+      if (containerRef.current && index < activeTasks.length - 1) {
+        const nextTask = containerRef.current.querySelector(`[data-task-index="${index + 1}"]`);
+        if (nextTask) {
+          nextTask.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }, 300);
+  }, [toggleTask, activeTasks.length]);
 
   return (
     <section>
@@ -42,17 +52,28 @@ export function TasksSection() {
             </div>
           </div>
           <p className="text-gray-700 font-medium">
-            Cumpliste todas las tareas del dia, felicitaciones!
+            Cumpliste todas las tareas del dia
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div ref={containerRef} className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="divide-y divide-gray-50">
-            {activeTasks.map((task) => (
-              <TaskRow key={task.id} task={task} onToggle={() => handleToggle(task.id)} />
+            {activeTasks.map((task, index) => (
+              <TaskRow 
+                key={task.id} 
+                task={task} 
+                index={index}
+                onToggle={() => handleToggle(task.id, index)} 
+              />
             ))}
-            {completedTasks.map((task) => (
-              <TaskRow key={task.id} task={task} onToggle={() => handleToggle(task.id)} completed />
+            {completedTasks.map((task, index) => (
+              <TaskRow 
+                key={task.id} 
+                task={task} 
+                index={activeTasks.length + index}
+                onToggle={() => toggleTask(task.id)} 
+                completed 
+              />
             ))}
           </div>
         </div>
@@ -70,13 +91,13 @@ export function TasksSection() {
   );
 }
 
-function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => void; completed?: boolean }) {
+function TaskRow({ task, index, onToggle, completed }: { task: Task; index: number; onToggle: () => void; completed?: boolean }) {
   const overdue = !completed && isOverdue(task.dueDate);
   const dueToday = !completed && isDueToday(task.dueDate);
   const [swipeX, setSwipeX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const startXRef = useRef(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
 
   const getDueBadge = useCallback(() => {
     if (completed && task.completedDate) {
@@ -115,14 +136,12 @@ function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => vo
     if (!isDragging) return;
     const currentX = e.touches[0].clientX;
     const diff = currentX - startXRef.current;
-    // Only allow swipe right for completing
-    const limitedDiff = Math.max(0, Math.min(100, diff));
+    const limitedDiff = Math.max(0, Math.min(80, diff));
     setSwipeX(limitedDiff);
   };
 
   const handleTouchEnd = () => {
-    if (swipeX > 70) {
-      // Swipe right - complete
+    if (swipeX > 60) {
       onToggle();
     }
     setSwipeX(0);
@@ -135,14 +154,13 @@ function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => vo
     setIsDragging(true);
     
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
       const diff = e.clientX - startXRef.current;
-      const limitedDiff = Math.max(0, Math.min(100, diff));
+      const limitedDiff = Math.max(0, Math.min(80, diff));
       setSwipeX(limitedDiff);
     };
     
     const handleMouseUp = () => {
-      if (swipeX > 70) {
+      if (swipeX > 60) {
         onToggle();
       }
       setSwipeX(0);
@@ -155,29 +173,41 @@ function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => vo
     document.addEventListener('mouseup', handleMouseUp);
   };
 
+  // Get creator info
+  const creatorName = task.createdByMe 
+    ? 'Creada por mi' 
+    : task.assignedBy 
+      ? task.assignedBy.name 
+      : 'Sistema';
+  
+  const creatorAvatar = task.createdByMe 
+    ? 'YO' 
+    : task.assignedBy?.avatar || 'SY';
+
   return (
-    <div ref={containerRef} className="relative overflow-hidden">
-      {/* Swipe background - only visible when swiping */}
+    <div 
+      ref={rowRef}
+      data-task-index={index}
+      className="relative overflow-hidden"
+    >
+      {/* Swipe background - hidden until swiping */}
       <div 
-        className={cn(
-          "absolute inset-0 flex items-center pl-4 transition-opacity",
-          swipeX > 0 ? "opacity-100" : "opacity-0"
-        )}
-        style={{ backgroundColor: '#22C55E' }}
+        className="absolute inset-y-0 left-0 flex items-center pl-4 transition-opacity"
+        style={{ 
+          backgroundColor: '#22C55E',
+          width: '80px',
+          opacity: swipeX > 0 ? 1 : 0,
+        }}
       >
         <Check className="w-5 h-5 text-white" />
-        <span className="ml-2 text-white text-sm font-medium">
-          {completed ? 'Desmarcar' : 'Completar'}
-        </span>
       </div>
       
       {/* Main content */}
       <div 
         className={cn(
-          'flex items-start gap-3 p-3 bg-white relative select-none cursor-grab active:cursor-grabbing',
+          'flex items-start gap-3 p-3 bg-white relative select-none',
           completed && 'opacity-50',
           overdue && 'border-l-2 border-l-red-500',
-          isDragging && 'transition-none',
           !isDragging && 'transition-transform duration-200'
         )}
         style={{ transform: `translateX(${swipeX}px)` }}
@@ -199,34 +229,28 @@ function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => vo
         </div>
         
         <div className="flex-1 min-w-0">
+          {/* Task title */}
           <p className={cn(
             'text-sm font-medium text-gray-800',
             completed && 'line-through'
           )}>
             {task.title}
           </p>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-              {task.tag}
+          
+          {/* Creator info with avatar */}
+          <div className="flex items-center gap-1.5 mt-1">
+            <Avatar 
+              name={creatorName} 
+              initials={creatorAvatar} 
+              size="xs" 
+            />
+            <span className="text-xs text-gray-500">
+              {creatorName}
             </span>
-            {task.createdByMe ? (
-              <span 
-                className="text-xs px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: '#EEF2FF', color: '#496BE3' }}
-              >
-                Creada por mi
-              </span>
-            ) : task.assignedBy && (
-              <span 
-                className="text-xs px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: '#FEF3C7', color: '#D97706' }}
-              >
-                Asignada por {task.assignedBy.name.split(' ')[0]}
-              </span>
-            )}
           </div>
         </div>
 
+        {/* Due date badge */}
         <span className={cn('text-xs px-2 py-0.5 rounded-full shrink-0', badge.className)}>
           {badge.text}
         </span>
