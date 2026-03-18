@@ -15,7 +15,7 @@ const DAY_LABELS = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
 // Categories allowed in all-day row
 const ALL_DAY_CATEGORIES = new Set([
   'holiday', 'vacation', 'medical-leave', 
-  'performance', 'survey', 'onboarding'
+  'performance', 'survey', 'onboarding', 'communication'
 ]);
 
 export function WeekView() {
@@ -287,9 +287,7 @@ export function WeekView() {
                   }}
                 >
                   {!holiday && timedEvents.map((event) => {
-                    const displayName = showFullName 
-                      ? event.title.slice(0, nameMaxChars) + (event.title.length > nameMaxChars ? '...' : '')
-                      : '';
+                    const displayName = event.title.slice(0, nameMaxChars) + (event.title.length > nameMaxChars ? '...' : '');
                     const isVideocall = event.category === 'videocall';
                     return (
                       <button
@@ -299,14 +297,17 @@ export function WeekView() {
                             ? { type: 'videocall', event } 
                             : { type: 'event', event }
                         )}
-                        className="w-full text-[8px] px-1 py-1 rounded text-white text-left flex flex-col"
+                        className="w-full text-[8px] px-1 py-1 rounded text-white text-left flex flex-col gap-0.5"
                         style={{ 
                           backgroundColor: categoryColors[event.category],
                           minHeight: eventMinHeight - 8,
                         }}
                       >
-                        <span className="font-medium">{event.startTime}</span>
-                        {displayName && <span className="truncate">{displayName}</span>}
+                        <div className="flex items-center gap-1">
+                          <CategoryIcon category={event.category} size={10} className="text-white shrink-0" />
+                          <span className="font-medium">{event.startTime}</span>
+                        </div>
+                        <span className="truncate leading-tight">{displayName}</span>
                       </button>
                     );
                   })}

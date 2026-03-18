@@ -180,6 +180,8 @@ export const events: CalendarEvent[] = [
   // Communication today
   { id: 't-9', title: 'Recordatorio: completa la encuesta hoy', category: 'communication', startDate: date(3, 19), isAllDay: true, organizer: people.rrhh },
   { id: 't-10', title: 'Nuevo post: Tips para home office efectivo', category: 'communication', startDate: date(3, 19), isAllDay: true, organizer: people.bienestar },
+  { id: 't-11', title: 'Noticia: Resultados del Q1 superan expectativas', category: 'communication', startDate: date(3, 19), isAllDay: true, organizer: people.carlos },
+  { id: 't-12', title: 'Aviso: Mantenimiento del sistema sabado', category: 'communication', startDate: date(3, 19), isAllDay: true, organizer: people.humand },
   
   // March 20 (Friday)
   { id: 'm20-1', title: 'Daily Standup', category: 'videocall', startDate: date(3, 20), isAllDay: false, startTime: '09:00', endTime: '09:15', organizer: people.elena },
