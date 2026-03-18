@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Humand Brand Colors */
+  --color-primary: #182E7B;
+  --color-accent: #496BE3;
+  --color-background: #F5F6FA;
+  --color-card: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-muted: #6B7280;
+  --color-muted-foreground: #9CA3AF;
+  
+  /* Category Colors */
+  --color-birthday: #EC4899;
+  --color-holiday: #6B7280;
+  --color-vacation: #14B8A6;
+  --color-company-event: #8B5CF6;
+  --color-performance: #F97316;
+  --color-survey: #EAB308;
+  --color-training: #6366F1;
+  --color-onboarding: #22C55E;
+  --color-task: #EF4444;
+  --color-videocall: #3B82F6;
+  --color-communication: #F43F5E;
+  --color-reminder: #A855F7;
+  
+  /* Badge colors */
+  --color-danger: #EF4444;
+  --color-warning: #F97316;
+  --color-success: #22C55E;
+  
+  /* Font */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-comfortaa: 'Comfortaa', cursive;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+/* Skeleton animation */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+/* Hide scrollbar for filter chips */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
