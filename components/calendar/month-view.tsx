@@ -12,7 +12,7 @@ import {
 const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
 export function MonthView() {
-  const { selectedDate, setSelectedDate, setCalendarView, events, activeFilters } = useApp();
+  const { selectedDate, setSelectedDate, events, activeFilters, openBottomSheet } = useApp();
   
   const monthStart = startOfMonth(selectedDate);
   const monthEnd = endOfMonth(selectedDate);
@@ -54,7 +54,10 @@ export function MonthView() {
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
-    setCalendarView('dia');
+    const dayEvents = getEventsForDay(day);
+    if (dayEvents.length > 0) {
+      openBottomSheet({ type: 'day-events', date: day });
+    }
   };
 
   // Check if we're viewing a month with no events (May+)
