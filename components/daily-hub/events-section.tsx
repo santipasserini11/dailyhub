@@ -2,10 +2,11 @@
 
 import { useState, useMemo } from 'react';
 import { useApp } from '@/lib/context';
-import { categoryColors, categoryIcons } from '@/lib/data';
+import { categoryColors } from '@/lib/data';
 import { TODAY } from '@/lib/utils';
 import { ChevronRight, Video } from 'lucide-react';
 import { CalendarEvent } from '@/lib/types';
+import { CategoryIcon } from '@/components/ui/category-icon';
 
 // Categories to include in "Proximos eventos" section
 const INCLUDED_CATEGORIES = new Set([
@@ -91,7 +92,6 @@ export function EventsSection() {
 
 function EventRow({ event, onClick, onJoin }: { event: CalendarEvent; onClick: () => void; onJoin: () => void }) {
   const color = categoryColors[event.category] || '#6B7280';
-  const icon = categoryIcons[event.category] || '';
   const isVideocall = event.category === 'videocall';
   
   return (
@@ -104,7 +104,7 @@ function EventRow({ event, onClick, onJoin }: { event: CalendarEvent; onClick: (
           className="w-1 h-10 rounded-full shrink-0"
           style={{ backgroundColor: color }}
         />
-        <span className="text-lg">{icon}</span>
+        <CategoryIcon category={event.category} size={20} className="text-gray-600" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-800 truncate">{event.title}</p>
           <p className="text-xs text-gray-500">

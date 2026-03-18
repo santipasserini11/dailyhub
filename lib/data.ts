@@ -470,22 +470,7 @@ export const categoryColors: Record<string, string> = {
   'communication': '#F43F5E',
 };
 
-// Category icons
-export const categoryIcons: Record<string, string> = {
-  'birthday': '🎂',
-  'anniversary': '🎉',
-  'holiday': '🏛️',
-  'vacation': '🌴',
-  'medical-leave': '🏥',
-  'company-event': '🎤',
-  'performance': '📊',
-  'survey': '💬',
-  'training': '🎓',
-  'onboarding': '✅',
-  'task': '📋',
-  'videocall': '📞',
-  'communication': '📢',
-};
+
 
 // Category labels in Spanish
 export const categoryLabels: Record<string, string> = {

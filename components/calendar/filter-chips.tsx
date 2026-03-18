@@ -1,8 +1,9 @@
 'use client';
 
 import { useApp } from '@/lib/context';
-import { categoryColors, categoryLabels, categoryIcons } from '@/lib/data';
+import { categoryColors, categoryLabels } from '@/lib/data';
 import { cn } from '@/lib/utils';
+import { CategoryIcon } from '@/components/ui/category-icon';
 
 const filterCategories = [
   'birthday', 'holiday', 'vacation', 'company-event', 'performance', 
@@ -18,9 +19,8 @@ export function FilterChips() {
         const isActive = activeFilters.has(category) || activeFilters.has('anniversary');
         const color = categoryColors[category];
         const label = category === 'birthday' 
-          ? 'Cumpleaños' 
+          ? 'Cumpleanos' 
           : categoryLabels[category];
-        const icon = categoryIcons[category];
 
         return (
           <button
@@ -48,8 +48,9 @@ export function FilterChips() {
               )}
               style={{ backgroundColor: color }}
             />
+            <CategoryIcon category={category} size={12} className={isActive ? 'text-gray-600' : 'text-gray-400'} />
             <span className={isActive ? 'text-gray-700' : 'text-gray-400'}>
-              {icon} {label}
+              {label}
             </span>
           </button>
         );

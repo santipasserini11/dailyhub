@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useApp } from '@/lib/context';
 import { Avatar } from '@/components/ui/avatar';
 import { isTodayDate } from '@/lib/utils';
+import { Cake, Gift } from 'lucide-react';
 
 export function BirthdaysSection() {
   const { events } = useApp();
@@ -38,15 +39,15 @@ export function BirthdaysSection() {
               <div className="flex-1">
                 <p className="font-medium text-gray-800">{event.person?.name}</p>
                 <span 
-                  className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full"
+                  className="inline-flex items-center gap-1 mt-1 text-xs px-2 py-0.5 rounded-full"
                   style={{ 
                     backgroundColor: isBirthday ? '#FDF2F8' : '#FEF3C7',
                     color: isBirthday ? '#EC4899' : '#D97706'
                   }}
                 >
                   {isBirthday 
-                    ? '🎂 Cumpleanos'
-                    : `🎉 ${event.yearsInCompany} anos en la empresa`
+                    ? <><Cake className="w-3 h-3" /> Cumpleanos</>
+                    : <><Gift className="w-3 h-3" /> {event.yearsInCompany} anos en la empresa</>
                   }
                 </span>
               </div>

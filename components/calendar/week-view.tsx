@@ -3,7 +3,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useApp } from '@/lib/context';
 import { useCalendarDensity } from '@/lib/hooks';
-import { getShiftForDate, isHoliday, getHolidayName, categoryColors, categoryIcons } from '@/lib/data';
+import { getShiftForDate, isHoliday, getHolidayName, categoryColors } from '@/lib/data';
+import { CategoryIcon } from '@/components/ui/category-icon';
 import { TODAY, isPastDate, isTodayDate, cn } from '@/lib/utils';
 import { startOfWeek, addDays, isWeekend, getDay } from 'date-fns';
 import { CalendarEvent } from '@/lib/types';
@@ -59,7 +60,7 @@ export function WeekView() {
 
   // Group similar all-day events (vacations)
   const groupAllDayEvents = (dayEvents: CalendarEvent[]) => {
-    const grouped: { events: CalendarEvent[]; label: string; color: string; icon: string }[] = [];
+    const grouped: { events: CalendarEvent[]; label: string; color: string; category: string }[] = [];
     const vacations = dayEvents.filter(e => e.category === 'vacation' || e.category === 'medical-leave');
     const others = dayEvents.filter(e => 
       e.category !== 'vacation' && e.category !== 'medical-leave'
@@ -71,14 +72,14 @@ export function WeekView() {
         events: vacations,
         label: `Vacaciones · ${vacations.length} personas`,
         color: categoryColors['vacation'],
-        icon: '🌴',
+        category: 'vacation',
       });
     } else {
       vacations.forEach(e => grouped.push({
         events: [e],
         label: e.person?.name.split(' ')[0] || e.title,
         color: categoryColors[e.category],
-        icon: categoryIcons[e.category],
+        category: e.category,
       }));
     }
 
@@ -86,7 +87,7 @@ export function WeekView() {
       events: [e],
       label: e.title.slice(0, nameMaxChars) + (e.title.length > nameMaxChars ? '...' : ''),
       color: categoryColors[e.category],
-      icon: categoryIcons[e.category],
+      category: e.category,
     }));
 
     return grouped;
@@ -223,7 +224,7 @@ export function WeekView() {
                     className="w-full text-[8px] px-1 py-0.5 rounded mb-0.5 text-white truncate text-left flex items-center gap-0.5"
                     style={{ backgroundColor: group.color }}
                   >
-                    <span>{group.icon}</span>
+                    <CategoryIcon category={group.category} size={10} className="text-white shrink-0" />
                     {showFullName && <span className="truncate">{group.label}</span>}
                   </button>
                 ))}

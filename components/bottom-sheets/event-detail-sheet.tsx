@@ -1,10 +1,11 @@
 'use client';
 
 import { CalendarEvent } from '@/lib/types';
-import { categoryColors, categoryIcons, categoryLabels } from '@/lib/data';
+import { categoryColors, categoryLabels } from '@/lib/data';
 import { formatDate, formatDateRange } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
-import { Video, ExternalLink, CheckSquare } from 'lucide-react';
+import { Video, ExternalLink, CheckSquare, Building2 } from 'lucide-react';
+import { CategoryIcon } from '@/components/ui/category-icon';
 
 interface EventDetailSheetProps {
   event: CalendarEvent;
@@ -12,7 +13,6 @@ interface EventDetailSheetProps {
 
 export function EventDetailSheet({ event }: EventDetailSheetProps) {
   const color = categoryColors[event.category];
-  const icon = categoryIcons[event.category];
   const label = categoryLabels[event.category];
 
   const getActionButton = () => {
@@ -70,7 +70,7 @@ export function EventDetailSheet({ event }: EventDetailSheetProps) {
       case 'holiday':
         return (
           <div className="text-center py-4">
-            <span className="text-2xl">🏛️</span>
+            <Building2 className="w-8 h-8 text-gray-500 mx-auto" />
             <p className="text-gray-600 mt-2">Feriado nacional — Descansa!</p>
           </div>
         );
@@ -104,10 +104,10 @@ export function EventDetailSheet({ event }: EventDetailSheetProps) {
       {/* Category badge */}
       <div className="flex items-center gap-2">
         <span 
-          className="text-sm px-3 py-1 rounded-full text-white flex items-center gap-1"
+          className="text-sm px-3 py-1 rounded-full text-white flex items-center gap-1.5"
           style={{ backgroundColor: color }}
         >
-          <span>{icon}</span>
+          <CategoryIcon category={event.category} size={14} className="text-white" />
           <span>{label}</span>
         </span>
       </div>
