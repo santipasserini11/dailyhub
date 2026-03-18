@@ -64,12 +64,12 @@ export function MonthView() {
     openBottomSheet({ type: 'day-events', date: day });
   };
 
-  // Get cell background color
-  const getCellBg = (day: Date) => {
+  // Get cell background color - more distinct colors
+  const getCellBg = (day: Date, isPast: boolean) => {
     const holiday = isHoliday(day);
-    if (holiday) return '#FEFCE8'; // Yellow for holidays
-    if (isWeekend(day)) return '#F3F4F6'; // Gray for weekends
-    return '#F9FAFB'; // Slight gray for workdays
+    if (holiday) return isPast ? '#FEF9C3' : '#FDE047'; // Yellow - brighter for holidays, muted for past
+    if (isWeekend(day)) return isPast ? '#E0E7FF' : '#C7D2FE'; // Indigo/blue for weekends
+    return isPast ? '#F3F4F6' : '#FFFFFF'; // White for workdays, gray for past
   };
 
   const hasEvents = weeks.some(week => 
@@ -107,9 +107,9 @@ export function MonthView() {
                   'p-2 min-h-[48px] text-center transition-colors hover:bg-gray-100',
                   !isCurrentMonth && 'opacity-30'
                 )}
-                style={{ backgroundColor: getCellBg(day) }}
+                style={{ backgroundColor: getCellBg(day, isPastDate(day)) }}
               >
-                <span className="text-sm text-gray-700">{day.getDate()}</span>
+                <span className="text-sm text-gray-600">{day.getDate()}</span>
               </button>
             );
           })}
@@ -150,18 +150,19 @@ export function MonthView() {
               onClick={() => handleDayClick(day)}
               className={cn(
                 'p-1 min-h-[48px] flex flex-col items-center transition-colors hover:opacity-80',
-                !isCurrentMonth && 'opacity-30',
-                isPast && isCurrentMonth && !isToday && 'opacity-50'
+                !isCurrentMonth && 'opacity-30'
               )}
-              style={{ backgroundColor: getCellBg(day) }}
+              style={{ backgroundColor: getCellBg(day, isPast && !isToday) }}
               title={holidayName || undefined}
             >
               <div className="flex items-center gap-0.5">
-                {holiday && <span className="text-[8px]">🏛️</span>}
+                {holiday && <span className="text-[10px]">🏛️</span>}
                 <span 
                   className={cn(
-                    'text-sm w-6 h-6 flex items-center justify-center rounded-full',
-                    isToday && 'text-white'
+                    'text-sm w-6 h-6 flex items-center justify-center rounded-full font-medium',
+                    isToday && 'text-white',
+                    isPast && !isToday && 'text-gray-400',
+                    !isPast && !isToday && 'text-gray-800'
                   )}
                   style={{ backgroundColor: isToday ? '#496BE3' : undefined }}
                 >
