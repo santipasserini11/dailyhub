@@ -289,10 +289,15 @@ export function WeekView() {
                     const displayName = showFullName 
                       ? event.title.slice(0, nameMaxChars) + (event.title.length > nameMaxChars ? '...' : '')
                       : '';
+                    const isVideocall = event.category === 'videocall';
                     return (
                       <button
                         key={event.id}
-                        onClick={() => openBottomSheet({ type: 'event', event })}
+                        onClick={() => openBottomSheet(
+                          isVideocall 
+                            ? { type: 'videocall', event } 
+                            : { type: 'event', event }
+                        )}
                         className="w-full text-[8px] px-1 py-1 rounded text-white text-left flex flex-col"
                         style={{ 
                           backgroundColor: categoryColors[event.category],
