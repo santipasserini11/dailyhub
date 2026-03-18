@@ -120,11 +120,14 @@ export function WeekView() {
     );
   }
 
+  // Fixed column template for consistent alignment
+  const gridCols = 'grid-cols-[32px_repeat(7,1fr)]';
+
   return (
     <div className="flex-1 overflow-auto">
       {/* Header row */}
       <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
-        <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px">
+        <div className={`grid ${gridCols}`}>
           <div className="p-1" />
           {weekDays.map((day, i) => {
             const isPast = isPastDate(day);
@@ -161,7 +164,7 @@ export function WeekView() {
         </div>
 
         {/* Shift strips */}
-        <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px border-t border-gray-100">
+        <div className={`grid ${gridCols} border-t border-gray-100`}>
           <div className="p-1" />
           {weekDays.map((day, i) => {
             const shift = getShiftForDate(day);
@@ -193,8 +196,8 @@ export function WeekView() {
         </div>
 
         {/* All-day events */}
-        <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px border-t border-gray-100">
-          <div className="p-1 text-[9px] text-gray-400">Todo el dia</div>
+        <div className={`grid ${gridCols} border-t border-gray-100`}>
+          <div className="p-1 text-[8px] text-gray-400 leading-tight"></div>
           {weekDays.map((day, i) => {
             const dayEvents = getEventsForDay(day, true);
             const grouped = groupAllDayEvents(dayEvents);
@@ -244,15 +247,15 @@ export function WeekView() {
       </div>
 
       {/* Time grid */}
-      <div className="grid grid-cols-[40px_repeat(7,1fr)] gap-px relative">
+      <div className={`grid ${gridCols} relative`}>
         {/* Current time indicator */}
         {isCurrentWeek && todayIndex >= 0 && timeIndicatorTop >= 0 && (
           <div 
             className="absolute z-20 flex items-center pointer-events-none"
             style={{ 
               top: timeIndicatorTop,
-              left: `calc(40px + ${todayIndex} * ((100% - 40px) / 7))`,
-              width: `calc((100% - 40px) / 7)`,
+              left: `calc(32px + ${todayIndex} * ((100% - 32px) / 7))`,
+              width: `calc((100% - 32px) / 7)`,
             }}
           >
             <div className="w-2 h-2 rounded-full bg-red-500 -ml-1" />
@@ -262,7 +265,7 @@ export function WeekView() {
 
         {HOURS.map((hour) => (
           <div key={hour} className="contents">
-            <div className="p-1 text-[9px] text-gray-400 text-right pr-2 bg-white">
+            <div className="text-[8px] text-gray-400 text-right pr-1 bg-white flex items-start justify-end pt-0.5">
               {hour}:00
             </div>
             {weekDays.map((day, dayIndex) => {
