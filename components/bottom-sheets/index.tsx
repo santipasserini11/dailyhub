@@ -3,6 +3,7 @@
 import { useApp } from '@/lib/context';
 import { BottomSheet } from './bottom-sheet';
 import { EventDetailSheet } from './event-detail-sheet';
+import { VideocallSheet } from './videocall-sheet';
 import { ShiftSheet } from './shift-sheet';
 import { WhosOutSheet } from './whos-out-sheet';
 import { NewTaskSheet } from './new-task-sheet';
@@ -18,7 +19,9 @@ export function BottomSheetManager() {
   const getTitle = () => {
     switch (bottomSheet.type) {
       case 'event':
-        return undefined; // No title, event has its own header
+        return undefined;
+      case 'videocall':
+        return undefined;
       case 'shift':
         return 'Mi turno';
       case 'whos-out':
@@ -36,6 +39,8 @@ export function BottomSheetManager() {
     switch (bottomSheet.type) {
       case 'event':
         return <EventDetailSheet event={bottomSheet.event} />;
+      case 'videocall':
+        return <VideocallSheet event={bottomSheet.event} onClose={closeBottomSheet} />;
       case 'shift':
         return <ShiftSheet date={bottomSheet.date} />;
       case 'whos-out':

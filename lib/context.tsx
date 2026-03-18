@@ -32,6 +32,7 @@ interface AppState {
 
 export type BottomSheetState = 
   | { type: 'event'; event: CalendarEvent }
+  | { type: 'videocall'; event: CalendarEvent }
   | { type: 'shift'; date: Date }
   | { type: 'whos-out' }
   | { type: 'new-task' }

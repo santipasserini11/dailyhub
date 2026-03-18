@@ -1,14 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useApp } from '@/lib/context';
 import { currentUser } from '@/lib/data';
-import { getGreeting, formatDate, TODAY } from '@/lib/utils';
+import { getGreeting, formatDate, TODAY, isTodayDate } from '@/lib/utils';
 import { Sparkles, Flame } from 'lucide-react';
 
 export function HeaderSection() {
   const greeting = getGreeting();
   const firstName = currentUser.name.split(' ')[0];
   const [showStreakTooltip, setShowStreakTooltip] = useState(false);
+  const { tasks, events } = useApp();
+  
+  // Get first videocall of the day
+  const firstVideocall = useMemo(() => {
+    return events
+      .filter(e => e.category === 'videocall' && isTodayDate(e.startDate) && !e.isAllDay && e.startTime)
+      .sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''))[0];
+  }, [events]);
+  
+  // Count pending tasks for today
+  const pendingTasksCount = useMemo(() => {
+    return tasks.filter(t => !t.completed).length;
+  }, [tasks]);
+  
+  // Check if survey closes today
+  const surveyClosesToday = useMemo(() => {
+    return events.some(e => 
+      e.category === 'survey' && 
+      isTodayDate(e.startDate) && 
+      e.title.toLowerCase().includes('cierra')
+    );
+  }, [events]);
   
   return (
     <section className="space-y-3">
@@ -33,11 +56,11 @@ export function HeaderSection() {
         >
           <div className="flex items-center gap-1 px-2.5 py-1 bg-orange-50 rounded-full cursor-help">
             <Flame className="w-4 h-4 text-orange-500" />
-            <span className="text-sm font-medium text-orange-600">12 días</span>
+            <span className="text-sm font-medium text-orange-600">12 dias</span>
           </div>
           {showStreakTooltip && (
             <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg whitespace-nowrap z-50 shadow-lg">
-              12 días seguidos cumpliendo tus tareas
+              12 dias seguidos cumpliendo tus tareas
               <div className="absolute -top-1 right-4 w-2 h-2 bg-gray-800 rotate-45" />
             </div>
           )}
@@ -54,16 +77,20 @@ export function HeaderSection() {
           <ul className="text-sm text-gray-700 space-y-1">
             <li className="flex items-start gap-2">
               <span className="text-gray-400">•</span>
-              <span>Tenés <strong>4 tareas</strong> para hoy</span>
+              <span>Tenes <strong>{pendingTasksCount} tareas</strong> pendientes</span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="text-gray-400">•</span>
-              <span>Tu standup arranca a las <strong>9:00</strong></span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-gray-400">•</span>
-              <span>La encuesta de clima <strong>cierra hoy</strong> — no te olvides de completarla</span>
-            </li>
+            {firstVideocall && (
+              <li className="flex items-start gap-2">
+                <span className="text-gray-400">•</span>
+                <span><strong>{firstVideocall.title}</strong> arranca a las <strong>{firstVideocall.startTime}</strong></span>
+              </li>
+            )}
+            {surveyClosesToday && (
+              <li className="flex items-start gap-2">
+                <span className="text-gray-400">•</span>
+                <span>La encuesta de clima <strong>cierra hoy</strong> — no te olvides de completarla</span>
+              </li>
+            )}
           </ul>
         </div>
       </div>

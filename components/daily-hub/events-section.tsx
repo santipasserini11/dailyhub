@@ -48,8 +48,8 @@ export function EventsSection() {
     });
   }, [events]);
 
-  const displayedEvents = showAll ? todayEvents : todayEvents.slice(0, 5);
-  const hasMore = todayEvents.length > 5;
+  const displayedEvents = showAll ? todayEvents : todayEvents.slice(0, 6);
+  const hasMore = todayEvents.length > 6;
 
   if (todayEvents.length === 0) {
     return (
@@ -67,7 +67,12 @@ export function EventsSection() {
       <h2 className="text-lg font-semibold text-gray-800 mb-3">Proximos eventos</h2>
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden divide-y divide-gray-50">
         {displayedEvents.map((event) => (
-          <EventRow key={event.id} event={event} onClick={() => openBottomSheet({ type: 'event', event })} />
+          <EventRow 
+            key={event.id} 
+            event={event} 
+            onClick={() => openBottomSheet({ type: 'event', event })} 
+            onJoin={() => openBottomSheet({ type: 'videocall', event })}
+          />
         ))}
       </div>
       {hasMore && !showAll && (
@@ -76,7 +81,7 @@ export function EventsSection() {
           className="flex items-center gap-1 text-sm font-medium mt-2 hover:underline"
           style={{ color: '#496BE3' }}
         >
-          Ver todos
+          Ver todos ({todayEvents.length - 6} mas)
           <ChevronRight className="w-4 h-4" />
         </button>
       )}
@@ -84,7 +89,7 @@ export function EventsSection() {
   );
 }
 
-function EventRow({ event, onClick }: { event: CalendarEvent; onClick: () => void }) {
+function EventRow({ event, onClick, onJoin }: { event: CalendarEvent; onClick: () => void; onJoin: () => void }) {
   const color = categoryColors[event.category] || '#6B7280';
   const icon = categoryIcons[event.category] || '';
   const isVideocall = event.category === 'videocall';
@@ -112,9 +117,9 @@ function EventRow({ event, onClick }: { event: CalendarEvent; onClick: () => voi
         <button
           onClick={(e) => {
             e.stopPropagation();
-            // Simulated join action
+            onJoin();
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg shrink-0 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg shrink-0 transition-colors hover:opacity-90"
           style={{ backgroundColor: '#3B82F6', color: 'white' }}
         >
           <Video className="w-4 h-4" />

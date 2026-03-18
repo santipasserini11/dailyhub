@@ -263,7 +263,7 @@ export function WeekView() {
                 <div 
                   key={dayIndex}
                   className={cn(
-                    'border-t border-gray-50 p-0.5 relative',
+                    'border-t border-gray-200 p-0.5 relative bg-gray-50',
                     isPast && !isTodayDate(day) && 'opacity-40 grayscale'
                   )}
                   style={{ minHeight: eventMinHeight }}

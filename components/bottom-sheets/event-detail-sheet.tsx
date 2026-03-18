@@ -4,7 +4,7 @@ import { CalendarEvent } from '@/lib/types';
 import { categoryColors, categoryIcons, categoryLabels } from '@/lib/data';
 import { formatDate, formatDateRange } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
-import { Video, ExternalLink } from 'lucide-react';
+import { Video, ExternalLink, CheckSquare } from 'lucide-react';
 
 interface EventDetailSheetProps {
   event: CalendarEvent;
@@ -44,7 +44,17 @@ export function EventDetailSheet({ event }: EventDetailSheetProps) {
             style={{ backgroundColor: '#496BE3' }}
           >
             <ExternalLink className="w-5 h-5" />
-            Ir a la evaluación
+            Ir a la evaluacion
+          </button>
+        );
+      case 'onboarding':
+        return (
+          <button
+            className="w-full py-3 rounded-xl text-white font-medium flex items-center justify-center gap-2"
+            style={{ backgroundColor: '#22C55E' }}
+          >
+            <CheckSquare className="w-5 h-5" />
+            Ir a la tarea en onboarding
           </button>
         );
       case 'birthday':
@@ -61,8 +71,18 @@ export function EventDetailSheet({ event }: EventDetailSheetProps) {
         return (
           <div className="text-center py-4">
             <span className="text-2xl">🏛️</span>
-            <p className="text-gray-600 mt-2">Feriado nacional — ¡Descansá!</p>
+            <p className="text-gray-600 mt-2">Feriado nacional — Descansa!</p>
           </div>
+        );
+      case 'training':
+        return (
+          <button
+            className="w-full py-3 rounded-xl text-white font-medium flex items-center justify-center gap-2"
+            style={{ backgroundColor: '#6366F1' }}
+          >
+            <ExternalLink className="w-5 h-5" />
+            Ver capacitacion
+          </button>
         );
       case 'communication':
         return (
@@ -71,7 +91,7 @@ export function EventDetailSheet({ event }: EventDetailSheetProps) {
             style={{ backgroundColor: '#496BE3' }}
           >
             <ExternalLink className="w-5 h-5" />
-            Ver más
+            Ver mas
           </button>
         );
       default:
@@ -106,7 +126,7 @@ export function EventDetailSheet({ event }: EventDetailSheetProps) {
           <p className="text-sm text-gray-500">{event.startTime} – {event.endTime}</p>
         )}
         {event.isAllDay && (
-          <p className="text-sm text-gray-500">Todo el día</p>
+          <p className="text-sm text-gray-500">Todo el dia</p>
         )}
       </div>
 

@@ -4,7 +4,7 @@ import { useMemo, useCallback, useState, useRef } from 'react';
 import { useApp } from '@/lib/context';
 import { Task } from '@/lib/types';
 import { isOverdue, isDueToday, formatDate, cn } from '@/lib/utils';
-import { Check, Plus, PartyPopper, Trash2 } from 'lucide-react';
+import { Check, Plus, PartyPopper } from 'lucide-react';
 
 export function TasksSection() {
   const { tasks, toggleTask, openBottomSheet } = useApp();
@@ -74,8 +74,9 @@ function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => vo
   const overdue = !completed && isOverdue(task.dueDate);
   const dueToday = !completed && isDueToday(task.dueDate);
   const [swipeX, setSwipeX] = useState(0);
-  const [swiping, setSwiping] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const startXRef = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const getDueBadge = useCallback(() => {
     if (completed && task.completedDate) {
@@ -97,70 +98,105 @@ function TaskRow({ task, onToggle, completed }: { task: Task; onToggle: () => vo
       };
     }
     return {
-      text: formatDate(task.dueDate, "MMM d"),
+      text: formatDate(task.dueDate, "d MMM"),
       className: 'bg-gray-100 text-gray-600',
     };
   }, [completed, task.completedDate, task.dueDate, overdue, dueToday]);
 
   const badge = getDueBadge();
 
-  // Swipe handlers
+  // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     startXRef.current = e.touches[0].clientX;
-    setSwiping(true);
+    setIsDragging(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!swiping) return;
-    const diff = e.touches[0].clientX - startXRef.current;
-    // Limit swipe distance
-    const limitedDiff = Math.max(-80, Math.min(80, diff));
+    if (!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const diff = currentX - startXRef.current;
+    // Only allow swipe right for completing
+    const limitedDiff = Math.max(0, Math.min(100, diff));
     setSwipeX(limitedDiff);
   };
 
   const handleTouchEnd = () => {
-    if (swipeX > 60) {
+    if (swipeX > 70) {
       // Swipe right - complete
       onToggle();
     }
-    // Swipe left - delete (would need delete handler)
     setSwipeX(0);
-    setSwiping(false);
+    setIsDragging(false);
+  };
+
+  // Mouse handlers for desktop
+  const handleMouseDown = (e: React.MouseEvent) => {
+    startXRef.current = e.clientX;
+    setIsDragging(true);
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      const diff = e.clientX - startXRef.current;
+      const limitedDiff = Math.max(0, Math.min(100, diff));
+      setSwipeX(limitedDiff);
+    };
+    
+    const handleMouseUp = () => {
+      if (swipeX > 70) {
+        onToggle();
+      }
+      setSwipeX(0);
+      setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Swipe actions background */}
-      <div className="absolute inset-y-0 left-0 w-20 bg-green-500 flex items-center justify-center">
+    <div ref={containerRef} className="relative overflow-hidden">
+      {/* Swipe background - only visible when swiping */}
+      <div 
+        className={cn(
+          "absolute inset-0 flex items-center pl-4 transition-opacity",
+          swipeX > 0 ? "opacity-100" : "opacity-0"
+        )}
+        style={{ backgroundColor: '#22C55E' }}
+      >
         <Check className="w-5 h-5 text-white" />
-      </div>
-      <div className="absolute inset-y-0 right-0 w-20 bg-red-500 flex items-center justify-center">
-        <Trash2 className="w-5 h-5 text-white" />
+        <span className="ml-2 text-white text-sm font-medium">
+          {completed ? 'Desmarcar' : 'Completar'}
+        </span>
       </div>
       
       {/* Main content */}
       <div 
         className={cn(
-          'flex items-start gap-3 p-3 bg-white relative transition-transform',
+          'flex items-start gap-3 p-3 bg-white relative select-none cursor-grab active:cursor-grabbing',
           completed && 'opacity-50',
-          overdue && 'border-l-2 border-l-red-500'
+          overdue && 'border-l-2 border-l-red-500',
+          isDragging && 'transition-none',
+          !isDragging && 'transition-transform duration-200'
         )}
         style={{ transform: `translateX(${swipeX}px)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
       >
-        <button
-          onClick={onToggle}
+        {/* Checkbox visual */}
+        <div
           className={cn(
-            'w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors',
+            'w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5',
             completed 
               ? 'bg-green-500 border-green-500' 
-              : 'border-gray-300 hover:border-gray-400'
+              : 'border-gray-300'
           )}
         >
           {completed && <Check className="w-3 h-3 text-white" />}
-        </button>
+        </div>
         
         <div className="flex-1 min-w-0">
           <p className={cn(

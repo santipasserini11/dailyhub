@@ -131,7 +131,7 @@ export function MonthView() {
               key={i}
               onClick={() => handleDayClick(day)}
               className={cn(
-                'p-1 min-h-[48px] flex flex-col items-center transition-colors hover:bg-gray-50',
+                'p-1 min-h-[48px] flex flex-col items-center transition-colors bg-gray-50 hover:bg-gray-100',
                 !isCurrentMonth && 'opacity-30',
                 isPast && isCurrentMonth && !isToday && 'opacity-40'
               )}
