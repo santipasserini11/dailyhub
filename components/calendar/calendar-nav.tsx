@@ -81,28 +81,28 @@ export function CalendarNav() {
 
       {/* Date navigation */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <button
             onClick={goPrev}
-            className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+            className="p-1 rounded-full hover:bg-gray-100 transition-colors"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <ChevronLeft className="w-4 h-4 text-gray-600" />
           </button>
           <button
             onClick={goNext}
-            className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+            className="p-1 rounded-full hover:bg-gray-100 transition-colors"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
+            <ChevronRight className="w-4 h-4 text-gray-600" />
           </button>
           <button
             onClick={goToToday}
-            className="px-3 py-1 text-sm font-medium rounded-full hover:bg-gray-100 transition-colors"
+            className="px-2 py-0.5 text-xs font-medium rounded-full hover:bg-gray-100 transition-colors"
             style={{ color: '#496BE3' }}
           >
             Hoy
           </button>
         </div>
-        <span className="text-sm font-medium text-gray-700 capitalize">
+        <span className="text-xs font-medium text-gray-700 capitalize">
           {getDateRangeLabel()}
         </span>
       </div>

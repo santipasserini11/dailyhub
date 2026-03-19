@@ -121,15 +121,15 @@ export function WeekView() {
   }
 
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="flex-1">
       <table className="w-full border-collapse table-fixed">
         <colgroup>
           <col style={{ width: '32px' }} />
           {weekDays.map((_, i) => <col key={i} />)}
         </colgroup>
         
-        {/* Sticky header */}
-        <thead className="sticky top-0 z-10 bg-white">
+        {/* Header */}
+        <thead className="bg-white">
           {/* Day names row */}
           <tr className="border-b border-gray-200">
             <th className="p-1"></th>

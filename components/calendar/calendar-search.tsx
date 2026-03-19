@@ -76,12 +76,12 @@ export function CalendarSearch() {
       {/* Search trigger button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg text-sm text-gray-500 hover:bg-gray-100 transition-colors w-full"
+        className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-500 hover:bg-gray-200 transition-colors"
       >
-        <Search className="w-4 h-4" />
-        <span className="flex-1 text-left">Buscar eventos, personas...</span>
-        <span className="flex items-center gap-0.5 text-xs text-gray-400 bg-white px-1.5 py-0.5 rounded border border-gray-200">
-          <Command className="w-3 h-3" />K
+        <Search className="w-3.5 h-3.5" />
+        <span>Buscar</span>
+        <span className="flex items-center gap-0.5 text-[10px] text-gray-400 bg-white px-1.5 py-0.5 rounded border border-gray-200">
+          <Command className="w-2.5 h-2.5" />K
         </span>
       </button>
 
