@@ -204,29 +204,29 @@ function EventRow({ event, groupKey, onEventClick, onJoinClick }: EventRowProps)
   // Special rendering for celebrations (birthdays/anniversaries)
   if (isCelebration && event.person) {
     return (
-      <div className="flex items-center gap-3 p-3">
+      <div className="flex items-center gap-2 p-2">
         <Avatar 
           name={event.person.name} 
           initials={event.person.avatar}
-          size="md" 
+          size="sm" 
         />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-800 truncate">{event.person.name}</p>
           <span 
-            className="inline-flex items-center gap-1 mt-0.5 text-xs px-2 py-0.5 rounded-full"
+            className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full"
             style={{ 
               backgroundColor: isBirthday ? '#FDF2F8' : '#FEF3C7',
               color: isBirthday ? '#EC4899' : '#D97706'
             }}
           >
             {isBirthday 
-              ? <><Cake className="w-3 h-3" /> Cumpleanos</>
-              : <><Gift className="w-3 h-3" /> {event.yearsInCompany} anos</>
+              ? <><Cake className="w-2.5 h-2.5" /> Cumpleanos</>
+              : <><Gift className="w-2.5 h-2.5" /> {event.yearsInCompany} anos en la empresa</>
             }
           </span>
         </div>
         <button
-          className="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
+          className="px-2 py-1 text-xs font-medium rounded-lg shrink-0"
           style={{ backgroundColor: '#EEF2FF', color: '#496BE3' }}
         >
           Felicitar
@@ -239,15 +239,15 @@ function EventRow({ event, groupKey, onEventClick, onJoinClick }: EventRowProps)
   return (
     <button
       onClick={isVideocall ? onJoinClick : onEventClick}
-      className="flex items-center gap-2 p-3 w-full text-left hover:bg-gray-50 transition-colors"
+      className="flex items-center gap-2 p-2 w-full text-left hover:bg-gray-50 transition-colors"
     >
       <div 
         className="w-1 self-stretch rounded-full shrink-0"
         style={{ backgroundColor: color }}
       />
-      <CategoryIcon category={event.category} size={18} className="shrink-0" style={{ color }} />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-800 line-clamp-2">{event.title}</p>
+      <CategoryIcon category={event.category} size={16} className="shrink-0" style={{ color }} />
+      <div className="flex-1 min-w-0 overflow-hidden">
+        <p className="text-sm font-medium text-gray-800 truncate">{event.title}</p>
         <p className="text-xs text-gray-500">
           {event.isAllDay ? 'Todo el dia' : `${event.startTime} - ${event.endTime}`}
         </p>
@@ -255,11 +255,11 @@ function EventRow({ event, groupKey, onEventClick, onJoinClick }: EventRowProps)
       
       {isVideocall && (
         <span
-          className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md shrink-0"
+          className="flex items-center gap-1 px-2 py-1 text-[11px] font-medium rounded-md shrink-0"
           style={{ backgroundColor: '#3B82F6', color: 'white' }}
         >
           <Video className="w-3 h-3" />
-          <span className="hidden sm:inline">Unirse</span>
+          Unirse
         </span>
       )}
     </button>
