@@ -237,37 +237,31 @@ function EventRow({ event, groupKey, onEventClick, onJoinClick }: EventRowProps)
 
   // Standard event rendering
   return (
-    <div className="flex items-center gap-3 p-3">
-      <button
-        onClick={onEventClick}
-        className="flex-1 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left rounded-lg -m-1 p-1"
-      >
-        <div 
-          className="w-1 h-10 rounded-full shrink-0"
-          style={{ backgroundColor: color }}
-        />
-        <CategoryIcon category={event.category} size={20} style={{ color }} />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-800 truncate">{event.title}</p>
-          <p className="text-xs text-gray-500">
-            {event.isAllDay ? 'Todo el dia' : `${event.startTime} - ${event.endTime}`}
-          </p>
-        </div>
-      </button>
+    <button
+      onClick={isVideocall ? onJoinClick : onEventClick}
+      className="flex items-center gap-2 p-3 w-full text-left hover:bg-gray-50 transition-colors"
+    >
+      <div 
+        className="w-1 self-stretch rounded-full shrink-0"
+        style={{ backgroundColor: color }}
+      />
+      <CategoryIcon category={event.category} size={18} className="shrink-0" style={{ color }} />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-gray-800 line-clamp-2">{event.title}</p>
+        <p className="text-xs text-gray-500">
+          {event.isAllDay ? 'Todo el dia' : `${event.startTime} - ${event.endTime}`}
+        </p>
+      </div>
       
       {isVideocall && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onJoinClick();
-          }}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg shrink-0 transition-colors hover:opacity-90"
+        <span
+          className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md shrink-0"
           style={{ backgroundColor: '#3B82F6', color: 'white' }}
         >
           <Video className="w-3 h-3" />
-          Unirse
-        </button>
+          <span className="hidden sm:inline">Unirse</span>
+        </span>
       )}
-    </div>
+    </button>
   );
 }
